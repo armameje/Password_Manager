@@ -7,6 +7,6 @@ namespace Password_Manager_API.Repository
         Task<Dictionary<string, int>> RetrieveAllPlatformAsync();
         Task AddPlatformAsync(string platformName);
         Task AddAccountToPlatformAsync(UserPlatformAccount account);
-        Task<PlatformAccount> GetAllAccountsOfUserAsync(string username);
+        Task<List<PlatformAccount>> GetAllAccountsOfUserAsync(string username);
     }
 }

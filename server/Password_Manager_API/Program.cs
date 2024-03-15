@@ -1,4 +1,7 @@
 using Asp.Versioning;
+using Password_Manager_API.Model;
+using Password_Manager_API.Repository;
+using Password_Manager_API.Services;
 
 namespace Password_Manager_API
 {
@@ -14,6 +17,18 @@ namespace Password_Manager_API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Configuration.AddJsonFile("ssl.json");
+
+            builder.Services.Configure<KeysOption>(
+                builder.Configuration.GetSection(KeysOption.Key));
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPlatformService, PlatformService>();
+            builder.Services.AddScoped<IRSAService, RSAService>();
+            builder.Services.AddScoped<IHashingService, HashingService>();
 
             builder.Services.AddApiVersioning(options =>
             {

@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
 using Password_Manager_API.Model;
+using System.Security.Principal;
 
 namespace Password_Manager_API.Repository
 {
@@ -81,12 +82,121 @@ namespace Password_Manager_API.Repository
         {
             try
             {
+                using (SqlConnection connection = new SqlConnection())
+                {
+                    SqlCommand command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandType = CommandType.StoredProcedure,
+                        CommandText = "usp_RegisterAccount"
+                    };
 
+                    SqlParameter usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@Username",
+                        SqlDbType = SqlDbType.VarChar,
+                        Direction = ParameterDirection.Input,
+                        Value = userAccount.Account.AccountUsername
+                    };
+
+                    SqlParameter passwordParam = new SqlParameter
+                    {
+                        ParameterName = "@Password",
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input,
+                        Value = userAccount.Account.Password
+                    };
+
+                    var platforms = await RetrieveAllPlatformAsync();
+                    var platformID = platforms.Where(x => x.Key.Equals(userAccount.Account.PlatformName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault().Value;
+
+                    SqlParameter platformIDParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformID",
+                        SqlDbType = SqlDbType.Int,
+                        Direction = ParameterDirection.Input,
+                        Value = platformID
+                    };
+
+                    var userRepo = new UserRepository();
+                    var user = await userRepo.RetrieveUserAsync(userAccount.Username);
+
+                    SqlParameter userIDParam = new SqlParameter
+                    {
+                        ParameterName = "@UserID",
+                        SqlDbType = SqlDbType.Int,
+                        Direction = ParameterDirection.Input,
+                        Value = user.UserID
+                    };
+
+                    command.Parameters.Add(usernameParam);
+                    command.Parameters.Add(passwordParam);
+                    command.Parameters.Add(platformIDParam);
+                    command.Parameters.Add(userIDParam);
+
+                    connection.Open();
+
+                    await command.ExecuteNonQueryAsync();
+                }
             }
             catch (Exception e)
             { 
             
             }
+        }
+
+        public async Task<List<PlatformAccount>> GetAllAccountsOfUserAsync(string username)
+        {
+            var platformAccounts = new List<PlatformAccount>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection())
+                {
+                    SqlCommand command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandType = CommandType.StoredProcedure,
+                        CommandText = "usp_GetAllAccountsOfUser"
+                    };
+
+                    SqlParameter usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+
+
+                    command.Parameters.Add(usernameParam);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            string platformUsername = reader["PlatformUsername"].ToString();
+                            string platformName = reader["PlatformName"].ToString();
+                            string platformPassword = reader["PlatformPassword"].ToString();
+
+                            platformAccounts.Add(new PlatformAccount
+                            {
+                                AccountUsername = platformUsername,
+                                PlatformName = platformName,
+                                Password = platformPassword
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return platformAccounts;
         }
     }
 }

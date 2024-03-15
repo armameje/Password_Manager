@@ -1,5 +1,9 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Password_Manager_API.Model;
+using Password_Manager_API.Repository;
+using Password_Manager_API.Services;
 
 namespace Password_Manager_API.Controllers
 {
@@ -8,12 +12,22 @@ namespace Password_Manager_API.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
+
+        public UserController(IUserService userService, IUserRepository userRepository)
+        {
+            _userService = userService;
+            _userRepository = userRepository;
+        }
+
         [MapToApiVersion(1.0)]
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(IOptions<KeysOption> options)
         {
-            return Ok();
+            var x = options.Value;
+            return Ok(new { PublicKey = x.PublicKey, PrivateKey = x.PrivateKey });
         }
 
         [MapToApiVersion(1.0)]
