@@ -2,18 +2,26 @@
 using System.Data;
 using Password_Manager_API.Model;
 using System.Security.Principal;
+using Microsoft.Extensions.Options;
 
 namespace Password_Manager_API.Repository
 {
     public class PlatformRepository : IPlatformRepository
     {
+        private readonly ConnectionStringOption _options;
+
+        public PlatformRepository(IOptions<ConnectionStringOption> options)
+        {
+            _options = options.Value;
+        }
+
         public async Task<Dictionary<string, int>> RetrieveAllPlatformAsync()
         {
             var platforms = new Dictionary<string, int>();
 
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_options.PasswordManagerDB))
                 {
                     SqlCommand command = new SqlCommand
                     {
@@ -47,7 +55,7 @@ namespace Password_Manager_API.Repository
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_options.PasswordManagerDB))
                 {
                     SqlCommand command = new SqlCommand
                     {
@@ -82,7 +90,7 @@ namespace Password_Manager_API.Repository
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_options.PasswordManagerDB))
                 {
                     SqlCommand command = new SqlCommand
                     {
@@ -151,7 +159,7 @@ namespace Password_Manager_API.Repository
 
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_options.PasswordManagerDB))
                 {
                     SqlCommand command = new SqlCommand
                     {

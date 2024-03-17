@@ -19,9 +19,13 @@ namespace Password_Manager_API
             builder.Services.AddSwaggerGen();
 
             builder.Configuration.AddJsonFile("ssl.json");
+            builder.Configuration.AddJsonFile("db.json");
 
             builder.Services.Configure<KeysOption>(
                 builder.Configuration.GetSection(KeysOption.Key));
+
+            builder.Services.Configure<ConnectionStringOption>(
+                builder.Configuration.GetSection(ConnectionStringOption.Key));
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();

@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Password_Manager_API.Services;
 
 namespace Password_Manager_API.Controllers
 {
@@ -8,6 +9,12 @@ namespace Password_Manager_API.Controllers
     [Route("[controller]")]
     public class PlatformController : ControllerBase
     {
+        private readonly IPlatformService _platformService;
+
+        public PlatformController(IPlatformService platformService)
+        {
+            _platformService = platformService;
+        }
 
         [HttpGet]
         [MapToApiVersion(1.0)]
@@ -21,7 +28,8 @@ namespace Password_Manager_API.Controllers
         [Route("[action]")]
         public async Task<IActionResult> AllPlatforms()
         {
-            return Ok();
+            var platforms = await _platformService.GetAllPlatformsAsync();
+            return Ok(platforms);
         }
 
         [HttpPost]

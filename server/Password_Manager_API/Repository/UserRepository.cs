@@ -1,17 +1,24 @@
-﻿using Microsoft.VisualBasic;
-using System.Data.SqlClient;
-using System.Data;
+﻿using Microsoft.Extensions.Options;
 using Password_Manager_API.Model;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Password_Manager_API.Repository
 {
     public class UserRepository : IUserRepository
     {
+        private readonly ConnectionStringOption _options;
+
+        public UserRepository(IOptions<ConnectionStringOption> options)
+        {
+            _options = options.Value;
+        }
+
         public async Task RegisterUserAsync(string username, string password)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_options.PasswordManagerDB))
                 {
                     SqlCommand command = new SqlCommand
                     {
@@ -57,7 +64,7 @@ namespace Password_Manager_API.Repository
 
             try
             {
-                using (SqlConnection connection = new SqlConnection())
+                using (SqlConnection connection = new SqlConnection(_options.PasswordManagerDB))
                 {
                     SqlCommand command = new SqlCommand
                     {
