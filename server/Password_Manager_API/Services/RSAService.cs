@@ -35,7 +35,7 @@ namespace Password_Manager_API.Services
 
         public RSACryptoServiceProvider GetPublicKeyFromPem(string filePath)
         {
-            using (TextReader reader = new StreamReader(File.ReadAllText(filePath)))
+            using (TextReader reader = new StreamReader(filePath))
             {
                 RsaKeyParameters publicKeyParam = (RsaKeyParameters)new PemReader(reader).ReadObject();
 
@@ -48,7 +48,8 @@ namespace Password_Manager_API.Services
 
         public RSACryptoServiceProvider GetPrivateKeyFromPem(string filePath)
         {
-            using (TextReader reader = new StringReader(File.ReadAllText(filePath)))
+            var privateText = File.ReadAllText(filePath);
+            using (TextReader reader = new StringReader(privateText))
             {
                 AsymmetricCipherKeyPair readKeyPair = (AsymmetricCipherKeyPair)new PemReader(reader).ReadObject();
 
