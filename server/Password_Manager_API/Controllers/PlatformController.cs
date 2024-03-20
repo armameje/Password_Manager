@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Password_Manager_API.Model;
 using Password_Manager_API.Services;
 
 namespace Password_Manager_API.Controllers
@@ -19,9 +20,20 @@ namespace Password_Manager_API.Controllers
         [HttpGet]
         [MapToApiVersion(1.0)]
         [Route("{user}")]
-        public async Task<IActionResult> AllUserAccounts()
+        public async Task<IActionResult> AllUserAccounts(string user)
         {
-            return Ok();
+            List<PlatformAccount> userAccounts = new List<PlatformAccount>(); ; 
+
+            try
+            {
+                userAccounts.AddRange(await _platformService.GetAllAccountsOfUserAsync(user));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok(userAccounts);
         }
 
         [HttpGet]
@@ -34,16 +46,33 @@ namespace Password_Manager_API.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> AddPlatform()
+        public async Task<IActionResult> AddPlatform([FromBody] string platformName)
         {
-            return Ok();
+            try
+            {
+                await _platformService.AddPlatformAsync(platformName);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
+            return Ok();
         }
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> AddAccount()
+        public async Task<IActionResult> AddAccount([FromBody] UserPlatformAccount account)
         {
+            try
+            {
+                await _platformService.AddAccountToPlatformAsync(account);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
             return Ok();
         }
     }

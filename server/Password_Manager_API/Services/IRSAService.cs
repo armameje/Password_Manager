@@ -6,7 +6,5 @@ namespace Password_Manager_API.Services
     {
         string Encrypt(string text);
         string Decrypt(string text);
-        RSACryptoServiceProvider GetPublicKeyFromPem(string filePath);
-        RSACryptoServiceProvider GetPrivateKeyFromPem(string filePath);
     }
 }

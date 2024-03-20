@@ -9,10 +9,12 @@ namespace Password_Manager_API.Repository
     public class PlatformRepository : IPlatformRepository
     {
         private readonly ConnectionStringOption _options;
+        private readonly IUserRepository _userRepo;
 
-        public PlatformRepository(IOptions<ConnectionStringOption> options)
+        public PlatformRepository(IOptions<ConnectionStringOption> options, IUserRepository userRepo)
         {
             _options = options.Value;
+            _userRepo = userRepo;
         }
 
         public async Task<Dictionary<string, int>> RetrieveAllPlatformAsync()
@@ -126,8 +128,7 @@ namespace Password_Manager_API.Repository
                         Value = platformID
                     };
 
-                    var userRepo = new UserRepository();
-                    var user = await userRepo.RetrieveUserAsync(userAccount.Username);
+                    var user = await _userRepo.RetrieveUserAsync(userAccount.Username);
 
                     SqlParameter userIDParam = new SqlParameter
                     {
@@ -185,7 +186,7 @@ namespace Password_Manager_API.Repository
                     {
                         while (reader.Read())
                         {
-                            string platformUsername = reader["PlatformUsername"].ToString();
+                            string platformUsername = reader["AccountUsername"].ToString();
                             string platformName = reader["PlatformName"].ToString();
                             string platformPassword = reader["PlatformPassword"].ToString();
 

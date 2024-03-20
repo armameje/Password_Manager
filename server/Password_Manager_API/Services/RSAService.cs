@@ -33,7 +33,7 @@ namespace Password_Manager_API.Services
             return Encoding.UTF8.GetString(decryptedBytes, 0, decryptedBytes.Length);
         }
 
-        public RSACryptoServiceProvider GetPublicKeyFromPem(string filePath)
+        private static RSACryptoServiceProvider GetPublicKeyFromPem(string filePath)
         {
             using (TextReader reader = new StreamReader(filePath))
             {
@@ -46,7 +46,7 @@ namespace Password_Manager_API.Services
             }
         }
 
-        public RSACryptoServiceProvider GetPrivateKeyFromPem(string filePath)
+        private static RSACryptoServiceProvider GetPrivateKeyFromPem(string filePath)
         {
             var privateText = File.ReadAllText(filePath);
             using (TextReader reader = new StringReader(privateText))
