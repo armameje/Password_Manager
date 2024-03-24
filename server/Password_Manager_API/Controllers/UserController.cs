@@ -9,7 +9,7 @@ namespace Password_Manager_API.Controllers
 {
     [ApiController]
     [ApiVersion(1.0)]
-    [Route("[controller]")]
+    [Route("api/v{v:apiVersion}/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

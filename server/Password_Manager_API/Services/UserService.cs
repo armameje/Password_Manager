@@ -38,6 +38,16 @@ namespace Password_Manager_API.Services
             {
                 var storedUserInfo = await _userRepository.RetrieveUserAsync(user.Username);
 
+                var isVerifiedUser = _hashingService.IsVerifiedUser(user.Password, storedUserInfo.Password);
+
+                if (isVerifiedUser)
+                {
+
+                }
+                else
+                {
+                    throw new Exception("Wrong password");
+                }
             }
             catch (Exception e)
             { 

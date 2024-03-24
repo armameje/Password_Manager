@@ -26,7 +26,13 @@ namespace Password_Manager_API.Test.UnitTest
         [Test]
         public void Encrypt_Success()
         {
-            var encryptedText = _rsaService.Encrypt("Test string");
+            var stringToEncrypt = "Test string";
+            var expectedResult = "Test string";
+
+            var encryptedText = _rsaService.Encrypt(stringToEncrypt);
+            var result = _rsaService.Decrypt(encryptedText);
+
+            Assert.That(result.Equals(expectedResult));
         }
 
         [Test]

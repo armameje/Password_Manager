@@ -34,6 +34,17 @@ namespace Password_Manager_API
             builder.Services.AddScoped<IRSAService, RSAService>();
             builder.Services.AddScoped<IHashingService, HashingService>();
 
+            const string CorsPolicyName = "AllowAll";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(CorsPolicyName, builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             builder.Services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1.0);
@@ -61,6 +72,7 @@ namespace Password_Manager_API
 
             app.UseAuthorization();
 
+            app.UseCors(CorsPolicyName);
 
             app.MapControllers();
 

@@ -7,7 +7,8 @@ namespace Password_Manager_API.Controllers
 {
     [ApiController]
     [ApiVersion(1.0)]
-    [Route("[controller]")]
+    [ApiVersion(2.0)]
+    [Route("api/v{v:apiVersion}/[controller]")]
     public class PlatformController : ControllerBase
     {
         private readonly IPlatformService _platformService;
