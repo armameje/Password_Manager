@@ -8,6 +8,20 @@ namespace PasswordManagerAPI.Controllers
     [Route("api/v{v:apiVersion}/[controller]")]
     public class PlatformController : ControllerBase
     {
+        [HttpPost]
+        [MapToApiVersion(1.0)]
+        [Route("[action]")]
+        public async Task<IActionResult> AddPlatform()
+        { 
+            return Ok();
+        }
 
+        [HttpGet]
+        [MapToApiVersion(1.0)]
+        [Route("{user:string}/{platform:string}")]
+        public async Task<IActionResult> GetPlatformInfoForUser(string user, string platform)
+        {
+            return Ok();
+        }
     }
 }
