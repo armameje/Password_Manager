@@ -1,7 +1,10 @@
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Password_Manager_API.Model;
 using Password_Manager_API.Repository;
 using Password_Manager_API.Services;
+using Serilog;
 
 namespace Password_Manager_API
 {
@@ -20,6 +23,23 @@ namespace Password_Manager_API
 
             builder.Configuration.AddJsonFile("ssl.json");
             builder.Configuration.AddJsonFile("db.json");
+
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = 
+                };
+            });
 
             builder.Services.Configure<KeysOption>(
                 builder.Configuration.GetSection(KeysOption.Key));
@@ -59,6 +79,9 @@ namespace Password_Manager_API
                 options.SubstituteApiVersionInUrl = true;
             });
 
+            builder.Host.UseSerilog((context, config) => 
+                config.ReadFrom.Configuration(context.Configuration));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -67,6 +90,8 @@ namespace Password_Manager_API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 

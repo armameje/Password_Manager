@@ -22,7 +22,7 @@ namespace Password_Manager_API.Services
             try
             {
                 var hashedPassword = _hashingService.HashPassword(user.Password);
-                await _userRepository.RegisterUserAsync(user.Username, hashedPassword);
+                await _userRepository.RegisterUserAsync(user.Username, hashedPassword).ConfigureAwait(false);
 
                 _logger.LogInformation($"Registered User: {user.Username}");
             }

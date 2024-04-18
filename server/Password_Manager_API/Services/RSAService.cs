@@ -11,18 +11,21 @@ namespace Password_Manager_API.Services
 {
     public class RSAService : IRSAService
     {
+        private readonly ILogger<IRSAService> _logger;
         private readonly RSACryptoServiceProvider _publicKey;
         private readonly RSACryptoServiceProvider _privateKey;
 
-        public RSAService(IOptions<KeysOption> options)
+        public RSAService(IOptions<KeysOption> options, ILogger<IRSAService> logger)
         {
             var optionsValue = options.Value;
             _publicKey = GetPublicKeyFromPem(optionsValue.PublicKey);
             _privateKey = GetPrivateKeyFromPem(optionsValue.PrivateKey);
+            _logger = logger;
         }
 
         public string Encrypt(string text)
         {
+            _logger.LogInformation("Encrypting text {text}", text);
             var encryptedBytes = _publicKey.Encrypt(Encoding.UTF8.GetBytes(text), false);
             return Convert.ToBase64String(encryptedBytes);
         }
