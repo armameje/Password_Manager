@@ -1,4 +1,4 @@
-﻿using PasswordManagerAPI.Services;
+﻿using PasswordManagerAPI.Services.Utils;
 
 namespace PasswordManagerAPI.Tests.UnitTests
 {

@@ -2,13 +2,12 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PasswordManagerAPI.Services
+namespace PasswordManagerAPI.Services.Utils
 {
     public class HashingService : IHashingService
     {
-        public SaltedPassword HashPassword(string password, int numberOfRounds)
+        public SaltedPassword HashPassword(string password, int numberOfRounds, byte[] salt)
         {
-            byte[] salt = GenerateSalt();
             byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
             //byte[] saltedPassword = new byte[passwordBytes.Length + salt.Length];
 
@@ -28,15 +27,16 @@ namespace PasswordManagerAPI.Services
         }
 
         public void VerifyPassword(string password)
-        { 
-        
+        {
+            // Get UserAccount info from db
+            // Generate the hashpassword; and compare
         }
 
         /// <summary>
         /// Generate random 16 length salt
         /// </summary>
         /// <returns></returns>
-        private byte[] GenerateSalt()
+        public byte[] GenerateSalt()
         {
             var rng = RandomNumberGenerator.Create();
 
@@ -54,7 +54,7 @@ namespace PasswordManagerAPI.Services
         /// <param name="currentRound">Memoization of salt rounds</param>
         /// <returns></returns>
         private (byte[] passwordBytes, byte[] salt, int numberOfRounds) ApplySaltRounds(byte[] passwordBytes, byte[] salt, int numberOfRounds, int currentRound = 0)
-        { 
+        {
             if (currentRound == numberOfRounds) return (passwordBytes, salt, numberOfRounds);
 
             var sha256 = SHA256.Create();
