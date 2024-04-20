@@ -16,7 +16,7 @@ namespace PasswordManagerAPI.Tests.UnitTests
         {
             var unecryptedPassword = "Unsafe password";
 
-            _hashingService.HashPassword(unecryptedPassword, 1);
+            _hashingService.HashPassword(unecryptedPassword, 1, [23, 23]);
         }
     }
-}
+}                                                                                                              

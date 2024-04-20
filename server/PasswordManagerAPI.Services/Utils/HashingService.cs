@@ -1,11 +1,14 @@
 ﻿using PasswordManagerAPI.Services.Models;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace PasswordManagerAPI.Services.Utils
 {
     public class HashingService : IHashingService
     {
+        private readonly ILogger<HashingService> _logger;
+
         public SaltedPassword HashPassword(string password, int numberOfRounds, byte[] salt)
         {
             byte[] passwordBytes = Encoding.UTF8.GetBytes(password);

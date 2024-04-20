@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using PasswordManagerAPI.Repository.Model;
 
 namespace PasswordManagerAPI
 {
@@ -15,6 +16,10 @@ namespace PasswordManagerAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Retrieve from json file using Options pattern
+            builder.Services.Configure<PasswordManagerCS>(
+                builder.Configuration.GetSection(nameof(PasswordManagerCS)));
+
             // Add Api Versioning
             builder.Services.AddApiVersioning(options =>
             {
@@ -29,6 +34,8 @@ namespace PasswordManagerAPI
                 options.GroupNameFormat = "'v'V";
                 options.SubstituteApiVersionInUrl = true;
             });
+
+
 
             var app = builder.Build();
 
