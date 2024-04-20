@@ -4,7 +4,7 @@ namespace PasswordManagerAPI.Services
 {
     public interface IUserService
     {
-        void RegisterUser(UserRegistration user);
+        Task RegisterUser(UserRegistration user);
         void LoginUser();
     }
 }

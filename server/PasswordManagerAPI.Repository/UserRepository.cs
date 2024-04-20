@@ -57,14 +57,10 @@ namespace PasswordManagerAPI.Repository
             return true;
         }
 
-        public async Task<string> RegisterUserAsync(string username, string password, string salt, int numberOfRounds)
+        public async Task RegisterUserAsync(string username, string password, string salt, int numberOfRounds)
         {
             try
             {
-                var isUsernameTaken = await IsUsernameTakenAsync(username);
-
-                if (isUsernameTaken) return "Username is already taken";
-
                 using (SqlConnection connection = new(_options.ConnectionString))
                 {
                     var command = new SqlCommand
@@ -124,8 +120,6 @@ namespace PasswordManagerAPI.Repository
             {
                 // Add logging
             }
-
-            return "Successfully added user";
         }
 
         public async Task RetrieveUserByUsernameAsync(string username)
