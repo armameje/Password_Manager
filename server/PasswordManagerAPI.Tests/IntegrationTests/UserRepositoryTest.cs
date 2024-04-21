@@ -26,7 +26,7 @@ namespace PasswordManagerAPI.Tests.IntegrationTests
         [Fact]
         public async Task RetrieveUserByUsernameAsync_Success()
         {
-            await _userRepo.RetrieveUserByUsernameAsync("FirstUser");
+            await _userRepo.RetrieveUserByUsernameAsync("asdsw");
         }
 
         [Fact]

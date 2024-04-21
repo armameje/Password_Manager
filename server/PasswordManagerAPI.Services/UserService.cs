@@ -20,7 +20,7 @@ namespace PasswordManagerAPI.Services
             _userRepo = userRepo;
         }
 
-        public async Task RegisterUser(UserRegistration user)
+        public async Task RegisterUserAsync(UserRegistration user)
         {
             try
             {
@@ -42,9 +42,19 @@ namespace PasswordManagerAPI.Services
 
         }
 
-        public void LoginUser()
-        { 
-        
+        public async Task LoginUser(UserLogin user)
+        {
+            try
+            {
+                var storedUserAccount = await _userRepo.RetrieveUserByUsernameAsync(user.Username);
+
+                if (storedUserAccount.Password is null && storedUserAccount.Salt is null) return;
+                
+            }
+            catch (Exception e)
+            { 
+              
+            }
         }
     }
 }

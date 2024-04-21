@@ -49,10 +49,7 @@ namespace PasswordManagerAPI.Repository
             
             }
 
-            if (numberOfAlike == 0)
-            {
-                return false;
-            }
+            if (numberOfAlike == 0) return false;
 
             return true;
         }
@@ -122,10 +119,14 @@ namespace PasswordManagerAPI.Repository
             }
         }
 
-        public async Task RetrieveUserByUsernameAsync(string username)
+        public async Task<StoredUserAccount> RetrieveUserByUsernameAsync(string username)
         {
+            var storedUserAccount = new StoredUserAccount();
+
             try
             {
+                storedUserAccount.Username = username;
+
                 using (SqlConnection connection = new(_options.ConnectionString))
                 {
                     var command = new SqlCommand
@@ -151,9 +152,9 @@ namespace PasswordManagerAPI.Repository
                     {
                         while (await reader.ReadAsync())
                         { 
-                            string password = reader.GetString("Password");
-                            string salt = reader.GetString("Salt");
-                            int numberOfRounds = reader.GetInt32("NumberOfSaltRounds");
+                            storedUserAccount.Password = reader.GetString("Password");
+                            storedUserAccount.Salt = reader.GetString("Salt");
+                            storedUserAccount.NumberOfSaltRounds = reader.GetInt32("NumberOfSaltRounds");
                         }
                     }
                 }
@@ -162,6 +163,8 @@ namespace PasswordManagerAPI.Repository
             { 
             
             }
+
+            return storedUserAccount;
         }
     }
 }
