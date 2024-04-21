@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PasswordManagerAPI.Repository.Model
 {
-    public class PasswordManagerCS
+    public class PasswordManagerCSOptions
     {
         public string ConnectionString { get; init; }
     }

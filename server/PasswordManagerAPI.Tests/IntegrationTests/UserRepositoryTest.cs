@@ -15,12 +15,12 @@ namespace PasswordManagerAPI.Tests.IntegrationTests
 
         public UserRepositoryTest()
         {
-            var passwordManagerCS = new PasswordManagerCS
+            var passwordManagerCS = new PasswordManagerCSOptions
             {
                 ConnectionString = "Server=PSUEDOENGINEERD\\TEW_SQLEXPRESS;Database=PasswordManager;Trusted_Connection=True;Encrypt=False;"
             };
 
-            _userRepo = new UserRepository(Options.Create<PasswordManagerCS>(passwordManagerCS));
+            _userRepo = new UserRepository(Options.Create<PasswordManagerCSOptions>(passwordManagerCS));
         }
 
         [Fact]

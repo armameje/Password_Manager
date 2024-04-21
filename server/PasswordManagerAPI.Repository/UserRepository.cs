@@ -7,9 +7,9 @@ namespace PasswordManagerAPI.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly PasswordManagerCS _options;
+        private readonly PasswordManagerCSOptions _options;
 
-        public UserRepository(IOptions<PasswordManagerCS> options)
+        public UserRepository(IOptions<PasswordManagerCSOptions> options)
         {
             _options = options.Value;
         }

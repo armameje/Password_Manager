@@ -1,4 +1,6 @@
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PasswordManagerAPI.OptionsSetup;
 using PasswordManagerAPI.Repository.Model;
 
 namespace PasswordManagerAPI
@@ -16,9 +18,13 @@ namespace PasswordManagerAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer();
+
             // Retrieve from json file using Options pattern
-            builder.Services.Configure<PasswordManagerCS>(
-                builder.Configuration.GetSection(nameof(PasswordManagerCS)));
+            builder.Services.ConfigureOptions<DBOptionsSetup>();
+            builder.Services.ConfigureOptions<JwtOptionsSetup>();
+            builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
             // Add Api Versioning
             builder.Services.AddApiVersioning(options =>
@@ -47,6 +53,8 @@ namespace PasswordManagerAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
