@@ -106,7 +106,7 @@ namespace PasswordManagerAPI.Repository
 
                     connection.Open();
 
-                    await command.ExecuteNonQueryAsync();
+                    var t = await command.ExecuteNonQueryAsync();
                 }
             }
             catch (SqlException e)
@@ -152,9 +152,9 @@ namespace PasswordManagerAPI.Repository
                     {
                         while (await reader.ReadAsync())
                         { 
-                            storedUserAccount.Password = reader.GetString("Password");
-                            storedUserAccount.Salt = reader.GetString("Salt");
-                            storedUserAccount.NumberOfSaltRounds = reader.GetInt32("NumberOfSaltRounds");
+                            storedUserAccount.Password = reader["Password"].ToString();
+                            storedUserAccount.Salt = reader["Salt"].ToString();
+                            storedUserAccount.NumberOfSaltRounds = Convert.ToInt32(reader["NumberOfSaltRounds"]);
                         }
                     }
                 }

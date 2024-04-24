@@ -18,7 +18,7 @@ namespace PasswordManagerAPI.Controllers
 
         [HttpGet]
         [MapToApiVersion(1.0)]
-        [Route("{user:string}/{platform:string}")]
+        [Route("{user}/{platform}")]
         public async Task<IActionResult> GetPlatformInfoForUser(string user, string platform)
         {
             return Ok();

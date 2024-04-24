@@ -1,7 +1,10 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PasswordManagerAPI.OptionsSetup;
+using PasswordManagerAPI.Repository;
 using PasswordManagerAPI.Repository.Model;
+using PasswordManagerAPI.Services;
+using PasswordManagerAPI.Services.Utils;
 
 namespace PasswordManagerAPI
 {
@@ -20,6 +23,12 @@ namespace PasswordManagerAPI
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer();
+
+            // Add Dependency Injection to container
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IHashingService, HashingService>();
+            builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             // Retrieve from json file using Options pattern
             builder.Services.ConfigureOptions<DBOptionsSetup>();
@@ -40,7 +49,6 @@ namespace PasswordManagerAPI
                 options.GroupNameFormat = "'v'V";
                 options.SubstituteApiVersionInUrl = true;
             });
-
 
 
             var app = builder.Build();

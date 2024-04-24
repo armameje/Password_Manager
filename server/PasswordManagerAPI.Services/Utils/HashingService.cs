@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using PasswordManagerAPI.Repository.Model;
 
 namespace PasswordManagerAPI.Services.Utils
 {
@@ -29,10 +30,11 @@ namespace PasswordManagerAPI.Services.Utils
             };
         }
 
-        public void VerifyPassword(string password)
+        public bool VerifyPassword(string password, StoredUserAccount storedUserAccount)
         {
             // Get UserAccount info from db
-            // Generate the hashpassword; and compare
+            var hashedStorePassword = HashPassword(password, storedUserAccount.NumberOfSaltRounds, Convert.FromBase64String(storedUserAccount.Salt));
+            return storedUserAccount.Password.Equals(hashedStorePassword.HashedPassword);
         }
 
         /// <summary>

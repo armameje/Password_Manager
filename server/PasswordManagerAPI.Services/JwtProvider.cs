@@ -20,28 +20,37 @@ namespace PasswordManagerAPI.Services
             _jwtOptions = options.Value;
         }
 
-        public string Generate()
+        public string Generate(UserRegistration user)
         {
-            var claims = new Claim[] 
-            { 
-                new(JwtRegisteredClaimNames.UniqueName, )
-            };
+            string tokenValue = string.Empty;
 
-            var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
-                SecurityAlgorithms.HmacSha256);
+            try
+            {
+                var claims = new Claim[]
+                {
+                new(JwtRegisteredClaimNames.UniqueName, user.Username)
+                };
 
-            var token = new JwtSecurityToken(
-                _jwtOptions.Issuer,
-                _jwtOptions.Audience,
-                claims,
-                null,
-                DateTime.UtcNow.AddHours(1),
-                null);
+                var signingCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+                    SecurityAlgorithms.HmacSha256);
 
-            string tokenValue = new JwtSecurityTokenHandler()
-                .WriteToken(token);
+                var token = new JwtSecurityToken(
+                    _jwtOptions.Issuer,
+                    _jwtOptions.Audience,
+                    claims,
+                    null,
+                    DateTime.UtcNow.AddHours(1),
+                    signingCredentials);
+
+                tokenValue = new JwtSecurityTokenHandler()
+                    .WriteToken(token);
+            }
+            catch (Exception e)
+            {
+
+            }
 
             return tokenValue;
         }
