@@ -6,5 +6,7 @@ namespace PasswordManagerAPI.Services
     {
         Task<string> RegisterUserAsync(UserRegistration user);
         Task<string> LoginUserAsync(UserLogin user);
+        Task DeleteUserAsync(UserLogin user);
+        Task ChangeUserPasswordAsync(UserLogin user);
     }
 }

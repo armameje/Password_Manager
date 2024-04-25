@@ -14,6 +14,78 @@ namespace PasswordManagerAPI.Repository
             _options = options.Value;
         }
 
+        public async Task ChangePasswordByUsernameAsync(string username)
+        {
+            try
+            {
+                using (SqlConnection connection = new(_options.ConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = "users.usp_ChangeUserPasswordByUsername",
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    var usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    command.Parameters.Add(usernameParam);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException e)
+            {
+
+            }
+            catch (Exception e)
+            { 
+            
+            }
+        }
+
+        public async Task DeleteUserByUsernameAsync(string username)
+        {
+            try
+            {
+                using (SqlConnection connection = new(_options.ConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = "users.usp_DeleteUserByUsername",
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    var usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    command.Parameters.Add(usernameParam);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException e)
+            { 
+            
+            }
+            catch (Exception e)
+            { 
+            
+            }
+        }
+
         public async Task<bool> IsUsernameTakenAsync(string username)
         {
             int numberOfAlike = 0;

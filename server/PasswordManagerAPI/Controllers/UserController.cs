@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PasswordManagerAPI.Services;
 using PasswordManagerAPI.Services.Models;
@@ -24,7 +25,11 @@ namespace PasswordManagerAPI.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Register([FromBody] UserRegistration user)
         {
+            _logger.LogInformation($"Registering user: {user.Username}");
+
             var token = await _userServce.RegisterUserAsync(user);
+
+            if (string.IsNullOrEmpty(token)) _logger.LogInformation($"Successfully registered: {user.Username}");
 
             return Ok(token);
         }
@@ -37,6 +42,24 @@ namespace PasswordManagerAPI.Controllers
             var token = await _userServce.LoginUserAsync(user);
 
             return Ok(token);
+        }
+
+        [HttpDelete]
+        [Authorize]
+        [MapToApiVersion(1.0)]
+        [Route("[action]")]
+        public async Task<IActionResult> DeleteUser()
+        {
+            return Ok();
+        }
+
+        [HttpPut]
+        [Authorize]
+        [MapToApiVersion(1.0)]
+        [Route("[action]")]
+        public async Task<IActionResult> ChangeUserPassword()
+        {
+            return Ok();
         }
     }
 }

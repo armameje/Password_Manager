@@ -75,5 +75,15 @@ namespace PasswordManagerAPI.Services
 
             return token = "Incorrect username or password";
         }
+
+        public Task DeleteUserAsync(UserLogin user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ChangeUserPasswordAsync(UserLogin user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

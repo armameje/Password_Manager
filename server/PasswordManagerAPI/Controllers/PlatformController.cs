@@ -8,6 +8,13 @@ namespace PasswordManagerAPI.Controllers
     [Route("api/v{v:apiVersion}/[controller]")]
     public class PlatformController : ControllerBase
     {
+        private readonly ILogger<PlatformController> _logger;
+
+        public PlatformController(ILogger<PlatformController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpPost]
         [MapToApiVersion(1.0)]
         [Route("[action]")]
