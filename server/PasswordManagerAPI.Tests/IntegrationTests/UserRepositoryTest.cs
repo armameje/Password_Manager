@@ -40,5 +40,11 @@ namespace PasswordManagerAPI.Tests.IntegrationTests
         {
             await _userRepo.IsUsernameTakenAsync("FirstUser");
         }
+
+        [Fact]
+        public async Task DeleteUserByUsernameAsync_Success()
+        {
+            await _userRepo.DeleteUserByUsernameAsync("tets");
+        }
     }
 }

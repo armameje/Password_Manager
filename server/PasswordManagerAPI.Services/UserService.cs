@@ -1,4 +1,5 @@
 ﻿using PasswordManagerAPI.Repository;
+using PasswordManagerAPI.Repository.Model;
 using PasswordManagerAPI.Services.Models;
 using PasswordManagerAPI.Services.Utils;
 using System;
@@ -76,14 +77,40 @@ namespace PasswordManagerAPI.Services
             return token = "Incorrect username or password";
         }
 
-        public Task DeleteUserAsync(UserLogin user)
+        public async Task DeleteUserAsync(string username)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userRepo.DeleteUserByUsernameAsync(username);
+            }
+            catch (Exception e)
+            { 
+            
+            }
         }
 
-        public Task ChangeUserPasswordAsync(UserLogin user)
+        public async Task ChangeUserPasswordAsync(string username, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var salt = _hashingService.GenerateSalt();
+                var numberOfRounds = new Random().Next(2, 6);
+                var hashedPassword = _hashingService.HashPassword(password, numberOfRounds, salt);
+
+                var newPassword = new ChangeUserPassword
+                { 
+                    Username = username,
+                    Password = hashedPassword.HashedPassword,
+                    Salt = hashedPassword.Salt,
+                    NumberOfSaltRounds = hashedPassword.NumberOfSaltRounds
+                };
+
+                await _userRepo.ChangePasswordByUsernameAsync(newPassword);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
     }
 }

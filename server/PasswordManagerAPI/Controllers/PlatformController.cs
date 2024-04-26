@@ -17,7 +17,7 @@ namespace PasswordManagerAPI.Controllers
 
         [HttpPost]
         [MapToApiVersion(1.0)]
-        [Route("[action]")]
+        [Route("{user}/{platform}")]
         public async Task<IActionResult> AddPlatform()
         { 
             return Ok();
@@ -27,6 +27,22 @@ namespace PasswordManagerAPI.Controllers
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}")]
         public async Task<IActionResult> GetPlatformInfoForUser(string user, string platform)
+        {
+            return Ok();
+        }
+
+        [HttpDelete]
+        [MapToApiVersion(1.0)]
+        [Route("{user}/delete/{platform}")]
+        public async Task<IActionResult> DeletePlatform(string user, string platform)
+        {
+            return Ok();
+        }
+
+        [HttpPut]
+        [MapToApiVersion(1.0)]
+        [Route("{user}/{platform}/changepassword")]
+        public async Task<IActionResult> ChangePlatformPassword(string user, string platform, [FromBody] string password)
         {
             return Ok();
         }

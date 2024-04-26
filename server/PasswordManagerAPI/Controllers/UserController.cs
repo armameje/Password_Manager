@@ -48,17 +48,21 @@ namespace PasswordManagerAPI.Controllers
         [Authorize]
         [MapToApiVersion(1.0)]
         [Route("[action]")]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteUser([FromBody] string username)
         {
+            await _userServce.DeleteUserAsync(username);
+
             return Ok();
         }
 
         [HttpPut]
-        [Authorize]
         [MapToApiVersion(1.0)]
         [Route("[action]")]
-        public async Task<IActionResult> ChangeUserPassword()
+        [Authorize]
+        public async Task<IActionResult> ChangeUserPassword([FromBody] UserLogin user)
         {
+            await _userServce.ChangeUserPasswordAsync(user.Username, user.Password);
+
             return Ok();
         }
     }

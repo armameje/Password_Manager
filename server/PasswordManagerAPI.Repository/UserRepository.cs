@@ -14,7 +14,7 @@ namespace PasswordManagerAPI.Repository
             _options = options.Value;
         }
 
-        public async Task ChangePasswordByUsernameAsync(string username)
+        public async Task ChangePasswordByUsernameAsync(ChangeUserPassword user)
         {
             try
             {
@@ -30,12 +30,41 @@ namespace PasswordManagerAPI.Repository
                     var usernameParam = new SqlParameter
                     {
                         ParameterName = "@Username",
-                        Value = username,
+                        Value = user.Username,
                         Direction = ParameterDirection.Input,
                         SqlDbType = SqlDbType.NVarChar
                     };
 
+                    var passwordParam = new SqlParameter
+                    {
+                        ParameterName = "@Password",
+                        Value = user.Password,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var saltParam = new SqlParameter
+                    {
+                        ParameterName = "@Salt",
+                        Value = user.Salt,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var saltRoundsParam = new SqlParameter
+                    {
+                        ParameterName = "@SaltRounds",
+                        Value = user.NumberOfSaltRounds,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.Int
+                    };
+
                     command.Parameters.Add(usernameParam);
+                    command.Parameters.Add(passwordParam);
+                    command.Parameters.Add(saltParam);
+                    command.Parameters.Add(saltRoundsParam);
+
+                    connection.Open();
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -52,6 +81,8 @@ namespace PasswordManagerAPI.Repository
 
         public async Task DeleteUserByUsernameAsync(string username)
         {
+            int numberOfDeletedUsers = 0;
+
             try
             {
                 using (SqlConnection connection = new(_options.ConnectionString))
@@ -73,7 +104,11 @@ namespace PasswordManagerAPI.Repository
 
                     command.Parameters.Add(usernameParam);
 
-                    await command.ExecuteNonQueryAsync();
+                    connection.Open();
+
+                    numberOfDeletedUsers = await command.ExecuteNonQueryAsync();
+
+                    if (numberOfDeletedUsers == 0) throw new Exception($"No username: {username} is registered");
                 }
             }
             catch (SqlException e)
@@ -81,8 +116,8 @@ namespace PasswordManagerAPI.Repository
             
             }
             catch (Exception e)
-            { 
-            
+            {
+                
             }
         }
 
@@ -117,6 +152,10 @@ namespace PasswordManagerAPI.Repository
                 }
             }
             catch (SqlException e)
+            {
+
+            }
+            catch (Exception e)
             { 
             
             }
@@ -223,7 +262,7 @@ namespace PasswordManagerAPI.Repository
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
-                        { 
+                        {
                             storedUserAccount.Password = reader["Password"].ToString();
                             storedUserAccount.Salt = reader["Salt"].ToString();
                             storedUserAccount.NumberOfSaltRounds = Convert.ToInt32(reader["NumberOfSaltRounds"]);
@@ -231,9 +270,13 @@ namespace PasswordManagerAPI.Repository
                     }
                 }
             }
-            catch (Exception e)
+            catch (SqlException e)
             { 
             
+            }
+            catch (Exception e)
+            {
+
             }
 
             return storedUserAccount;
