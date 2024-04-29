@@ -200,9 +200,69 @@ namespace PasswordManagerAPI.Repository
             }
         }
 
-        public Task GetPlatformInfoForUserAsync(PlatformDetails platform)
+        public async Task GetPlatformInfoForUserAsync(PlatformDetails platform)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new(_options.ConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = "platforms.usp_ChangePlatformPassword",
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    var usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@Username",
+                        Value = platform.Username,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformNameParam = new SqlParameter
+                    { 
+                        ParameterName = "@PlatformName",
+                        Value = platform.PlatformName,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformUsername = new SqlParameter
+                    { 
+                        ParameterName = "@PlatformUsername",
+                        Value = platform.PlatformUsername,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformPasswordParam = new SqlParameter
+                    {
+                        ParameterName = "@Password",
+                        Value = platform.PlatformPassword,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    command.Parameters.Add(usernameParam);
+                    command.Parameters.Add(platformNameParam);
+                    command.Parameters.Add(platformNameParam);
+                    command.Parameters.Add(platformPasswordParam);
+
+                    connection.Open();
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException e)
+            {
+
+            }
+            catch (Exception e)
+            { 
+            
+            }
         }
     }
 }
