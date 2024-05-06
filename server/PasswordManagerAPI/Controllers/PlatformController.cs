@@ -1,25 +1,34 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PasswordManagerAPI.Repository.Model;
+using PasswordManagerAPI.Services;
+using PasswordManagerAPI.Services.Models;
 
 namespace PasswordManagerAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [ApiVersion(1.0)]
     [Route("api/v{v:apiVersion}/[controller]")]
     public class PlatformController : ControllerBase
     {
         private readonly ILogger<PlatformController> _logger;
+        private readonly IPlatformService _platformService;
 
-        public PlatformController(ILogger<PlatformController> logger)
+        public PlatformController(ILogger<PlatformController> logger, IPlatformService platformService)
         {
             _logger = logger;
+            _platformService = platformService;
         }
 
         [HttpPost]
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}")]
-        public async Task<IActionResult> AddPlatform()
-        { 
+        public async Task<IActionResult> AddPlatform(string user, string platform, [FromBody] PlatformAccount account)
+        {
+            await _platformService.AddPlatformAccountAsync(user, platform, account.Username, account.Password);
+
             return Ok();
         }
 

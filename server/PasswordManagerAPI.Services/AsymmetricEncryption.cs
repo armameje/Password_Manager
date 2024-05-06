@@ -3,35 +3,31 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities.IO.Pem;
-using Password_Manager_API.Model;
+using PasswordManagerAPI.Services.Models;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Password_Manager_API.Services
+namespace PasswordManagerAPI.Services
 {
-    public class RSAService : IRSAService
+    public sealed class AsymmetricEncryption : IAsymmetricEncryption
     {
-        private readonly ILogger<IRSAService> _logger;
+        private readonly PEMOptions _pemAddresses;
         private readonly RSACryptoServiceProvider _publicKey;
         private readonly RSACryptoServiceProvider _privateKey;
 
-        public RSAService(IOptions<KeysOption> options, ILogger<IRSAService> logger)
+        public AsymmetricEncryption(IOptions<PEMOptions> options)
         {
-            var optionsValue = options.Value;
-            _publicKey = GetPublicKeyFromPem(optionsValue.PublicKey);
-            _privateKey = GetPrivateKeyFromPem(optionsValue.PrivateKey);
-            _logger = logger;
+            _pemAddresses = options.Value;
+            _publicKey = GetPublicKeyFromPem(_pemAddresses.PublicAddress);
+            _privateKey = GetPrivateKeyFromPem(_pemAddresses.PrivateAddress);
         }
 
         public string Encrypt(string text)
         {
-            _logger.LogInformation("Encrypting text {text}", text);
             var encryptedBytes = _publicKey.Encrypt(Encoding.UTF8.GetBytes(text), false);
             return Convert.ToBase64String(encryptedBytes);
         }
-
-        public string Decrypt(string text) 
+        public string Decrypt(string text)
         {
             var decryptedBytes = _privateKey.Decrypt(Convert.FromBase64String(text), false);
             return Encoding.UTF8.GetString(decryptedBytes, 0, decryptedBytes.Length);
@@ -63,5 +59,6 @@ namespace Password_Manager_API.Services
                 return csp;
             }
         }
+
     }
 }

@@ -144,7 +144,7 @@ namespace PasswordManagerAPI.Repository
             }
         }
 
-        public async Task DeletePlatformAsync(PlatformDetails platform)
+        public async Task DeletePlatformAsync(PlatformDetailsNoPassword platform)
         {
             try
             {
@@ -200,8 +200,15 @@ namespace PasswordManagerAPI.Repository
             }
         }
 
-        public async Task GetPlatformInfoForUserAsync(PlatformDetails platform)
+        public async Task<PlatformDetails> GetPlatformInfoForUserAsync(PlatformDetailsNoPassword platform)
         {
+            var platformDetails = new PlatformDetails
+            {
+                Username = platform.Username,
+                PlatformName = platform.PlatformName,
+                PlatformUsername = platform.PlatformUsername
+            };
+
             try
             {
                 using (SqlConnection connection = new(_options.ConnectionString))
@@ -209,7 +216,7 @@ namespace PasswordManagerAPI.Repository
                     var command = new SqlCommand
                     {
                         Connection = connection,
-                        CommandText = "platforms.usp_ChangePlatformPassword",
+                        CommandText = "platforms.usp_GetPlatformAccount",
                         CommandType = CommandType.StoredProcedure
                     };
 
@@ -229,7 +236,7 @@ namespace PasswordManagerAPI.Repository
                         SqlDbType = SqlDbType.NVarChar
                     };
 
-                    var platformUsername = new SqlParameter
+                    var platformUsernameParam = new SqlParameter
                     { 
                         ParameterName = "@PlatformUsername",
                         Value = platform.PlatformUsername,
@@ -237,22 +244,19 @@ namespace PasswordManagerAPI.Repository
                         SqlDbType = SqlDbType.NVarChar
                     };
 
-                    var platformPasswordParam = new SqlParameter
-                    {
-                        ParameterName = "@Password",
-                        Value = platform.PlatformPassword,
-                        Direction = ParameterDirection.Input,
-                        SqlDbType = SqlDbType.NVarChar
-                    };
-
                     command.Parameters.Add(usernameParam);
                     command.Parameters.Add(platformNameParam);
-                    command.Parameters.Add(platformNameParam);
-                    command.Parameters.Add(platformPasswordParam);
+                    command.Parameters.Add(platformUsernameParam);
 
                     connection.Open();
 
-                    await command.ExecuteNonQueryAsync();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            platformDetails.PlatformPassword = reader["PlatformPassword"].ToString();
+                        }
+                    }
                 }
             }
             catch (SqlException e)
@@ -263,6 +267,8 @@ namespace PasswordManagerAPI.Repository
             { 
             
             }
+
+            return platformDetails;
         }
     }
 }

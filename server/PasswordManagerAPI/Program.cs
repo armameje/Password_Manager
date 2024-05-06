@@ -8,6 +8,7 @@ using PasswordManagerAPI.Services.Utils;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using PasswordManagerAPI.Services.Models;
 
 namespace PasswordManagerAPI
 {
@@ -93,6 +94,7 @@ namespace PasswordManagerAPI
             // Retrieve from json file using Options pattern
             builder.Services.ConfigureOptions<DBOptionsSetup>();
             builder.Services.ConfigureOptions<JwtOptionsSetup>();
+            builder.Services.ConfigureOptions<PEMOptionsSetup>();
             //builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
             // Add Api Versioning

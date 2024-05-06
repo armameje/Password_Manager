@@ -5,8 +5,8 @@ namespace PasswordManagerAPI.Repository
     public interface IPlatformRepository
     {
         Task AddPlatformAsync(PlatformDetails platform);
-        Task GetPlatformInfoForUserAsync(PlatformDetails platform);
-        Task DeletePlatformAsync(PlatformDetails platform);
+        Task<PlatformDetails> GetPlatformInfoForUserAsync(PlatformDetailsNoPassword platform);
+        Task DeletePlatformAsync(PlatformDetailsNoPassword platform);
         Task ChangePlatformPasswordAsync(PlatformDetails platform);
     }
 }
