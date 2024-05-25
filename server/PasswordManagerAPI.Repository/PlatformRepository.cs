@@ -38,7 +38,7 @@ namespace PasswordManagerAPI.Repository
                     var platformNameParam = new SqlParameter
                     { 
                         ParameterName = "@PlatformName",
-                        Value = platform.PlatformPassword,
+                        Value = platform.PlatformName,
                         Direction = ParameterDirection.Input,
                         SqlDbType = SqlDbType.NVarChar
                     };
@@ -177,7 +177,7 @@ namespace PasswordManagerAPI.Repository
                     {
                         ParameterName = "@PlatformUsername",
                         Direction = ParameterDirection.Input,
-                        Value = platform.Username,
+                        Value = platform.PlatformUsername,
                         SqlDbType = SqlDbType.NVarChar
                     };
 

@@ -31,6 +31,10 @@ namespace PasswordManagerAPI.Tests.UnitTests
         {
             var toDecryptText = "botVoY68Exa38JGBzbof+0zgh8ndjvl0KZQLDqMyaUwuYiLrR3GvNxil3toqwluPNRX+rE6XMV4X3jz0HsR+Y2icIBQ88hkhtoKfdk/QB1huEskqfdqMB/4Kl2TyHSMi0RzVqJDv8VDNV4Wy67NZePFI5eN+shcqIEzslUhh7i8=";
             var decryptedText = _encryption.Decrypt(toDecryptText);
+
+            var expectedText = "SampleEncrypt";
+
+            Assert.True(expectedText.Equals(decryptedText, StringComparison.Ordinal));
         }
     }
 }

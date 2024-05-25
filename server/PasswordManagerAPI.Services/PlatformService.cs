@@ -47,11 +47,22 @@ namespace PasswordManagerAPI.Services
 
             try
             {
-                var storedUser = await _platformRepo.GetPlatformInfoForUserAsync(changePlatform);
+                var storedUser = await GetPlatformAccountAsync(username, platformName, platformUsername);
+
+                var storedPassword = _encryption.Decrypt(storedUser.PlatformPassword);
+
+                if (storedPassword.Equals(platformPassword, StringComparison.Ordinal))
+                {
+                    throw new Exception("Same Password");
+                }
+
+                changePlatform.PlatformPassword = _encryption.Encrypt(platformPassword);
+
+                await _platformRepo.ChangePlatformPasswordAsync(changePlatform);
             }
             catch (Exception e)
-            { 
-                
+            {
+                throw;
             }
         }
 
@@ -76,25 +87,28 @@ namespace PasswordManagerAPI.Services
 
         public async Task<PlatformDetails> GetPlatformAccountAsync(string username, string platformName, string platformUsername)
         {
-            var platformInfo = new PlatformDetailsNoPassword
+            var platformInfo = new PlatformDetails
             {
                 Username = username,
                 PlatformName = platformName,
                 PlatformUsername = platformUsername
             };
 
-            var platformDetails = new PlatformDetails();
 
             try
             {
-                platformDetails = await _platformRepo.GetPlatformInfoForUserAsync(platformInfo);
+                var details = await _platformRepo.GetPlatformInfoForUserAsync(platformInfo);
+
+                if (details.PlatformPassword is null) throw new Exception();
+
+                platformInfo.PlatformPassword = details.PlatformPassword;
             }
             catch (Exception e)
-            { 
-            
+            {
+                throw;
             }
 
-            return platformDetails;
+            return platformInfo;
         }
     }
 }

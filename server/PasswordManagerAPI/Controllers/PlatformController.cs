@@ -8,7 +8,7 @@ using PasswordManagerAPI.Services.Models;
 namespace PasswordManagerAPI.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [ApiVersion(1.0)]
     [Route("api/v{v:apiVersion}/[controller]")]
     public class PlatformController : ControllerBase
@@ -34,25 +34,31 @@ namespace PasswordManagerAPI.Controllers
 
         [HttpGet]
         [MapToApiVersion(1.0)]
-        [Route("{user}/{platform}")]
-        public async Task<IActionResult> GetPlatformInfoForUser(string user, string platform)
+        [Route("{user}/{platform}/{username}")]
+        public async Task<IActionResult> GetPlatformInfoForUser(string user, string platform, string username)
         {
-            return Ok();
+            var platformAccount = await _platformService.GetPlatformAccountAsync(user, platform, username);
+
+            return Ok(platformAccount);
         }
 
         [HttpDelete]
         [MapToApiVersion(1.0)]
-        [Route("{user}/delete/{platform}")]
-        public async Task<IActionResult> DeletePlatform(string user, string platform)
+        [Route("{user}/delete/{platform}/{username}")]
+        public async Task<IActionResult> DeletePlatform(string user, string platform, string username)
         {
+            await _platformService.DeletePlatformAccountAsync(user, platform, username);
+
             return Ok();
         }
 
         [HttpPut]
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}/changepassword")]
-        public async Task<IActionResult> ChangePlatformPassword(string user, string platform, [FromBody] string password)
+        public async Task<IActionResult> ChangePlatformPassword(string user, string platform, [FromBody] PlatformAccount account)
         {
+            await _platformService.ChangePlatformAccountPasswordAsync(user, platform, account.Username, account.Password);
+
             return Ok();
         }
     }

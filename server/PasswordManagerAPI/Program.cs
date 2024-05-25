@@ -87,9 +87,12 @@ namespace PasswordManagerAPI
 
             // Add Dependency Injection to container
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
+            builder.Services.AddScoped<IAsymmetricEncryption, AsymmetricEncryption>();
             builder.Services.AddScoped<IHashingService, HashingService>();
             builder.Services.AddScoped<IJwtProvider, JwtProvider>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPlatformService, PlatformService>();
 
             // Retrieve from json file using Options pattern
             builder.Services.ConfigureOptions<DBOptionsSetup>();
