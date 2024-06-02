@@ -116,6 +116,17 @@ namespace PasswordManagerAPI
             });
             builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+            var corsPolicyName = "AllowAll";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(corsPolicyName, builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
 
             var app = builder.Build();
 
@@ -125,6 +136,8 @@ namespace PasswordManagerAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors(corsPolicyName);
 
             app.UseHttpsRedirection();
 

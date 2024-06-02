@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using PasswordManagerAPI.Services;
 using PasswordManagerAPI.Services.Models;
 
@@ -27,11 +28,11 @@ namespace PasswordManagerAPI.Controllers
         {
             _logger.LogInformation($"Registering user: {user.Username}");
 
-            var token = await _userServce.RegisterUserAsync(user);
+            var registration = await _userServce.RegisterUserAsync(user);
 
-            if (string.IsNullOrEmpty(token)) _logger.LogInformation($"Successfully registered: {user.Username}");
+            if (string.IsNullOrEmpty(registration.Token)) _logger.LogInformation($"Successfully registered: {user.Username}");
 
-            return Ok(token);
+            return Ok(registration);
         }
 
         [HttpPost]

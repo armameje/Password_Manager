@@ -23,15 +23,21 @@ namespace PasswordManagerAPI.Services
             _jwtProvider = jwtProvider;
         }
 
-        public async Task<string> RegisterUserAsync(UserRegistration user)
+        public async Task<RegistrationResponse> RegisterUserAsync(UserRegistration user)
         {
-            string token = string.Empty;
+            var registration = new RegistrationResponse();
 
             try
             {
                 var isUsernameTaken = await _userRepo.IsUsernameTakenAsync(user.Username);
 
-                if (isUsernameTaken) throw new Exception();
+                if (isUsernameTaken)
+                {
+                    registration.IsSuccess = false;
+                    registration.Error = "Username is taken";
+
+                    return registration;
+                }
 
                 var salt = _hashingService.GenerateSalt();
                 var numberOfSaltRounds = new Random().Next(2, 6);
@@ -40,19 +46,20 @@ namespace PasswordManagerAPI.Services
 
                 await _userRepo.RegisterUserAsync(user.Username, saltedPassword.HashedPassword, saltedPassword.Salt, saltedPassword.NumberOfSaltRounds);
 
-                token = _jwtProvider.Generate(user);
+                registration.Token = _jwtProvider.Generate(user);
+                registration.IsSuccess = true;
             }
             catch (Exception e)
             {
 
             }
 
-            return token;
+            return registration;
         }
 
-        public async Task<string> LoginUserAsync(UserLogin user)
+        public async Task<LoginResponse> LoginUserAsync(UserLogin user)
         {
-            string token = string.Empty;
+            var login = new LoginResponse();
 
             try
             {
@@ -64,9 +71,10 @@ namespace PasswordManagerAPI.Services
 
                 if (validUser) 
                 {
-                    token = _jwtProvider.Generate(user);
+                    login.IsSuccess = true;
+                    login.Token = _jwtProvider.Generate(user);
 
-                    return token;
+                    return login;
                 }
             }
             catch (Exception e)
@@ -74,7 +82,10 @@ namespace PasswordManagerAPI.Services
               
             }
 
-            return token = "Incorrect username or password";
+            login.IsSuccess = false;
+            login.Error = "Incorrect username or password";
+
+            return login;
         }
 
         public async Task DeleteUserAsync(string username)
