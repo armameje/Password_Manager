@@ -8,7 +8,7 @@ using PasswordManagerAPI.Services.Models;
 namespace PasswordManagerAPI.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [ApiVersion(1.0)]
     [Route("api/v{v:apiVersion}/[controller]")]
     public class PlatformController : ControllerBase
