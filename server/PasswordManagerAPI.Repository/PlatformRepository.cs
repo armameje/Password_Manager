@@ -36,7 +36,7 @@ namespace PasswordManagerAPI.Repository
                     };
 
                     var platformNameParam = new SqlParameter
-                    { 
+                    {
                         ParameterName = "@PlatformName",
                         Value = platform.PlatformName,
                         Direction = ParameterDirection.Input,
@@ -55,7 +55,7 @@ namespace PasswordManagerAPI.Repository
                     {
                         ParameterName = "@Password",
                         Value = platform.PlatformPassword,
-                        Direction= ParameterDirection.Input,
+                        Direction = ParameterDirection.Input,
                         SqlDbType = SqlDbType.NVarChar
                     };
 
@@ -74,8 +74,8 @@ namespace PasswordManagerAPI.Repository
 
             }
             catch (Exception e)
-            { 
-            
+            {
+
             }
         }
 
@@ -195,8 +195,8 @@ namespace PasswordManagerAPI.Repository
 
             }
             catch (Exception e)
-            { 
-            
+            {
+
             }
         }
 
@@ -229,7 +229,7 @@ namespace PasswordManagerAPI.Repository
                     };
 
                     var platformNameParam = new SqlParameter
-                    { 
+                    {
                         ParameterName = "@PlatformName",
                         Value = platform.PlatformName,
                         Direction = ParameterDirection.Input,
@@ -237,7 +237,7 @@ namespace PasswordManagerAPI.Repository
                     };
 
                     var platformUsernameParam = new SqlParameter
-                    { 
+                    {
                         ParameterName = "@PlatformUsername",
                         Value = platform.PlatformUsername,
                         Direction = ParameterDirection.Input,
@@ -264,11 +264,60 @@ namespace PasswordManagerAPI.Repository
 
             }
             catch (Exception e)
-            { 
-            
+            {
+
             }
 
             return platformDetails;
+        }
+
+        public async Task<List<string>> GetAllPlatformsForUserAsync(string username)
+        {
+            var platformsForUser = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new(_options.ConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = "platforms.usp_GetAllUserPlatforms",
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    var usernameparam = new SqlParameter
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    command.Parameters.Add(usernameparam);
+
+                    connection.Open();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            platformsForUser.Add(reader["PlatformName"].ToString());
+                        }
+                    }
+                }
+
+            }
+            catch (SqlException e)
+            {
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return platformsForUser;
         }
     }
 }

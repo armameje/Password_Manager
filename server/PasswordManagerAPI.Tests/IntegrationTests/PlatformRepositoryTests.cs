@@ -31,5 +31,15 @@ namespace PasswordManagerAPI.Tests.IntegrationTests
 
             var x = await _platformRepo.GetPlatformInfoForUserAsync(test);
         }
+
+        [Fact]
+        public async Task GetAllPlatformsForUserAsync_Success()
+        {
+            string username = "erenboi";
+
+            var platformsForUser = await _platformRepo.GetAllPlatformsForUserAsync(username);
+
+            Assert.True(platformsForUser.Count.Equals(2));
+        }
     }
 }

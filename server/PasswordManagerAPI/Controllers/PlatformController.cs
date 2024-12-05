@@ -61,5 +61,13 @@ namespace PasswordManagerAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        [MapToApiVersion(1.0)]
+        [Route("{user}/paltforms")]
+        public async Task<IActionResult> GetAllPlatformsForUser(string user)
+        {
+            return Ok();
+        }
     }
 }
