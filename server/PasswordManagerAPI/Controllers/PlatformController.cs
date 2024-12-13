@@ -67,7 +67,9 @@ namespace PasswordManagerAPI.Controllers
         [Route("{user}/paltforms")]
         public async Task<IActionResult> GetAllPlatformsForUser(string user)
         {
-            return Ok();
+            var allPlatforms = await _platformService.GetAllPlatformsOfUserAsync(user);
+
+            return Ok(allPlatforms);
         }
     }
 }
