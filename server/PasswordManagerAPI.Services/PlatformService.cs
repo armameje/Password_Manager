@@ -111,9 +111,9 @@ namespace PasswordManagerAPI.Services
             return platformInfo;
         }
 
-        public async Task<List<string>> GetAllPlatformsOfUserAsync(string username)
+        public async Task<List<PlatformDisplay>> GetAllPlatformsOfUserAsync(string username)
         {
-            List<string> allUserPlatforms = new();
+            List<PlatformDisplay> allUserPlatforms = new();
 
             try
             {

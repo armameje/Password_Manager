@@ -271,9 +271,9 @@ namespace PasswordManagerAPI.Repository
             return platformDetails;
         }
 
-        public async Task<List<string>> GetAllPlatformsForUserAsync(string username)
+        public async Task<List<PlatformDisplay>> GetAllPlatformsForUserAsync(string username)
         {
-            var platformsForUser = new List<string>();
+            var platformsForUser = new List<PlatformDisplay>();
 
             try
             {
@@ -302,7 +302,7 @@ namespace PasswordManagerAPI.Repository
                     {
                         while (await reader.ReadAsync())
                         {
-                            platformsForUser.Add(reader["PlatformName"].ToString());
+                            platformsForUser.Add(new PlatformDisplay { Username = reader["Username"].ToString(), PlatformName = reader["PlatformName"].ToString() });
                         }
                     }
                 }

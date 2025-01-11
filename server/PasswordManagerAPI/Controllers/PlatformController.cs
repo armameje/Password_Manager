@@ -22,6 +22,13 @@ namespace PasswordManagerAPI.Controllers
             _platformService = platformService;
         }
 
+        /// <summary>
+        /// Add a platform for a User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="platform"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
         [HttpPost]
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}")]
@@ -32,6 +39,13 @@ namespace PasswordManagerAPI.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Get a platform's credential from a User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="platform"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
         [HttpGet]
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}/{username}")]
@@ -42,6 +56,13 @@ namespace PasswordManagerAPI.Controllers
             return Ok(platformAccount);
         }
 
+        /// <summary>
+        /// Delete a platform from a User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="platform"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
         [HttpDelete]
         [MapToApiVersion(1.0)]
         [Route("{user}/delete/{platform}/{username}")]
@@ -52,6 +73,13 @@ namespace PasswordManagerAPI.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Change a User's platform password
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="platform"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
         [HttpPut]
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}/changepassword")]
@@ -62,9 +90,14 @@ namespace PasswordManagerAPI.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Get all platform names of a User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpGet]
         [MapToApiVersion(1.0)]
-        [Route("{user}/paltforms")]
+        [Route("{user}/platforms")]
         public async Task<IActionResult> GetAllPlatformsForUser(string user)
         {
             var allPlatforms = await _platformService.GetAllPlatformsOfUserAsync(user);

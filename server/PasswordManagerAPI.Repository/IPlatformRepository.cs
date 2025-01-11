@@ -8,6 +8,6 @@ namespace PasswordManagerAPI.Repository
         Task<PlatformDetails> GetPlatformInfoForUserAsync(PlatformDetailsNoPassword platform);
         Task DeletePlatformAsync(PlatformDetailsNoPassword platform);
         Task ChangePlatformPasswordAsync(PlatformDetails platform);
-        Task<List<string>> GetAllPlatformsForUserAsync(string username);
+        Task<List<PlatformDisplay>> GetAllPlatformsForUserAsync(string username);
     }
 }
