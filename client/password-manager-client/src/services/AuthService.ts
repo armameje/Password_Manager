@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
+import { useDispatch } from "react-redux";
 
 const TOKEN_ISSUER = "PasswordManager_Jack";
 const AUDIENCE = "pleabs";
+const dispatch = useDispatch();
 
 type JwtToken = {
   valid: boolean;
@@ -25,6 +27,7 @@ export function verifyJWT(token: string): JwtToken {
   if (tokenExpiry > currentDate) {
     return { valid: true, expired: true } as JwtToken;
   }
-
+  
+  
   return { valid: true, expiry: decodedToken.payload.exp, expired: false, token } as JwtToken;
 }
