@@ -1,5 +1,6 @@
 ﻿using PasswordManagerAPI.Repository;
 using PasswordManagerAPI.Repository.Model;
+using System.Text;
 
 namespace PasswordManagerAPI.Services
 {
@@ -126,6 +127,27 @@ namespace PasswordManagerAPI.Services
             }
 
             return allUserPlatforms;
+        }
+
+        public async Task<string> RetrievePlatformPasswordAsync(string username, string platformName, string platformUsername)
+        {
+            string platformPassword = string.Empty;
+
+            try
+            {
+                var details = await GetPlatformAccountAsync(username, platformName, platformUsername);
+                var storedPassword = _encryption.Decrypt(details.PlatformPassword);
+
+                platformPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(storedPassword));
+
+
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
+            return platformPassword;
         }
     }
 }

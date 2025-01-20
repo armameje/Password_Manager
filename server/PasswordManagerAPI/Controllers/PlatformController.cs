@@ -56,6 +56,16 @@ namespace PasswordManagerAPI.Controllers
             return Ok(platformAccount);
         }
 
+        [HttpPost]
+        [MapToApiVersion(1.0)]
+        [Route("{user}/{platform}/account")]
+        public async Task<IActionResult> GetPlatformCredential(string user, string platform, [FromBody] string username)
+        { 
+            var retrievedPassword = await _platformService.RetrievePlatformPasswordAsync(user, platform, username);
+
+            return Ok(retrievedPassword);
+        }
+
         /// <summary>
         /// Delete a platform from a User
         /// </summary>

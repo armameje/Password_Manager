@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using PasswordManagerAPI.Services.Models;
+using System.Reflection;
 
 namespace PasswordManagerAPI
 {
@@ -31,7 +32,6 @@ namespace PasswordManagerAPI
                     Title = "Password Manager",
                     Description = ".NET 8 Web API"
                 });
-
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -56,6 +56,9 @@ namespace PasswordManagerAPI
                             new string[] {}
                     }
                 });
+
+                var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                swagger.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
             });
 
             var validIssuer = builder.Configuration.GetValue<string>("JwtOptions:Issuer");
