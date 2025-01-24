@@ -139,8 +139,6 @@ namespace PasswordManagerAPI.Services
                 var storedPassword = _encryption.Decrypt(details.PlatformPassword);
 
                 platformPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(storedPassword));
-
-
             }
             catch (Exception e)
             {
@@ -148,6 +146,21 @@ namespace PasswordManagerAPI.Services
             }
 
             return platformPassword;
+        }
+
+        public string WrapPasswordByUsernameLength(int usernameLength, string password)
+        {
+            string wrappedPassword = password;
+
+            if (usernameLength == 0)
+            {
+                return wrappedPassword;
+            }
+
+            usernameLength--;
+            wrappedPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(password));
+
+            return WrapPasswordByUsernameLength(usernameLength, wrappedPassword);
         }
     }
 }

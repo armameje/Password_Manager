@@ -10,5 +10,6 @@ namespace PasswordManagerAPI.Services
         Task DeletePlatformAccountAsync(string username, string platformName, string platformUsername);
         Task<List<PlatformDisplay>> GetAllPlatformsOfUserAsync(string username);
         Task<string> RetrievePlatformPasswordAsync(string username, string platformName, string platformUsername);
+        string WrapPasswordByUsernameLength(int usernameLength, string password);
     }
 }
