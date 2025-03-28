@@ -1,22 +1,31 @@
+import { Dispatch, SetStateAction, use, useEffect } from "react";
+
 type PlatformPageProps = {
-  platformName?: string;
-  username?: string;
+  platformName: string;
+  username: string;
   isEmpty?: boolean;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+  setPlatformName: Dispatch<SetStateAction<string>>;
+  setPlatformUsername: Dispatch<SetStateAction<string>>;
 };
 
-export default function PlatformPage({ platformName, username, isEmpty }: PlatformPageProps) {
+export default function PlatformPage({ platformName, username, isEmpty, setOpenModal, setPlatformName, setPlatformUsername }: PlatformPageProps) {
+  useEffect(() => {
+    setPlatformName(platformName);
+    setPlatformUsername(username);
+  }, []);
   if (isEmpty) {
     return (
-      <div className="flex bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 flex-col justify-center items-center">
-        <div>Add</div>
-      </div>
+      <button className="bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 focus:outline-none" onClick={() => setOpenModal(true)}>
+        <div className="">Add</div>
+      </button>
     );
   } else {
     return (
-      <div className="flex bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 flex-col justify-between">
-        <div className="text-4xl">{platformName}</div>
-        <div>{username}</div>
-      </div>
+      <button className="bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 focus:outline-none" onClick={() => setOpenModal(true)}>
+        <div className="">{platformName}</div>
+        <div className="">{username}</div>
+      </button>
     );
   }
 }

@@ -1,24 +1,60 @@
+import axios, { AxiosResponse } from "axios";
+import { Platform } from "../types/PlatformType";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { ApiResponse } from "../types/ApiResponseType";
 
-const url = "https://localhost:7117";
+export class PlatformService {
+  baseUrl: string;
+  token: string;
 
-export async function GetAllPlatforms(username: string): Promise<string[]> {
-  let response = new Response();
-  let headers = new Headers();
-  const token = useSelector((state: RootState) => state.token.token);
+  constructor(baseUrl = "https://localhost:7117/api/v1/platform/") {
+    this.baseUrl = baseUrl;
+    this.token = useSelector((state: RootState) => state.token.token);
+  }
 
-  headers.append("Content-Type", "application/json");
-  headers.append("Authorization", `Bearer ${token}`);
+  async addPlatform(platform: Platform): Promise<ApiResponse> {
+    let apiResponse: ApiResponse = { data: "", status: "" };
+    await axios
+      .post(
+        this.baseUrl + `${platform.user}/${platform.platformName}`,
+        {
+          username: platform.username,
+          password: platform.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
+      .then((response) => {
+        apiResponse.status = response.status;
+        apiResponse.data = response.data;
+      })
+      .catch((response) => {
+        console.error(response);
+      });
 
-  console.log(token);
+    return apiResponse;
+  }
 
-  try {
-    response = await fetch(url + `/api/v1/platform/${username}/platforms`, {
-      method: "GET",
-      headers,
-    });
-  } catch {}
+  async checkIfPlatformExists(platform: Platform): Promise<boolean> {
+    let value = true;
 
-  return await response.json();
+    await axios
+      .get(this.baseUrl + `${platform.user}/platforms`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        response.status;
+        let exist = response.data.some((x: { username: string; platformName: string }) => x.username === platform.username && x.platformName === platform.platformName);
+        if (!exist) value = false;
+      });
+    return value;
+  }
 }

@@ -31,3 +31,14 @@ export function verifyJWT(token: string): JwtToken {
   
   return { valid: true, expiry: decodedToken.payload.exp, expired: false, token } as JwtToken;
 }
+
+export function unencryptString(usernameLength: number, encryptedString: string): string {
+  let string = encryptedString;
+
+  if (usernameLength === 0 ) return string;
+
+  usernameLength--;
+  string = atob(encryptedString);
+
+  return unencryptString(usernameLength, string);
+}

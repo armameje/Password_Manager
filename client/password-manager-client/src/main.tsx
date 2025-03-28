@@ -42,7 +42,6 @@ import App from "./App.tsx";
 // );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <Provider store={store}>
@@ -52,5 +51,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Provider>
       </AuthProvider>
     </BrowserRouter>
-  // </React.StrictMode>
 );

@@ -1,4 +1,4 @@
-import * as k from "crypto";
+import * as crypto from "crypto";
 
 // export default function Decrypt() {
 //   const rawKey: string = import.meta.env.VITE_KEEPKEY;
@@ -15,16 +15,16 @@ import * as k from "crypto";
 //     );
 // }
 
-export default function Decrypt() {
+export default function Decrypt(encrypted: string) {
   const rawKey: string = import.meta.env.VITE_KEEPKEY;
   const pemKey = rawKey.replace(/\\n/g, "\n");
   const key = Buffer.from(pemKey, "utf8");
   console.log(key);
   const buffer = Buffer.from(
-    "XkgQzqroBupeHNd5C/0Pc510Eel1+RUWmpnZjaJZKaD/ZD7Q/nF5YSg2rRs5tMZ2xQ2uE/dyn5DUpOpDjaz+G8vs0KhApiN/UcXkh2PQpaxxBfqGD5yiivyHeCl9uC4P9caSVUJXPpnFtGGOaSe2+oYzvbfalbEUSXanSGUSuHw=",
+    encrypted,
     "base64"
   );
-  const test = k.privateDecrypt(
+  const decrypted = crypto.privateDecrypt(
     {
       key: key,
       padding: 1,
@@ -33,5 +33,5 @@ export default function Decrypt() {
     buffer
   );
   
-  console.log("output:" + test.toString("utf8"));
+  return decrypted.toString("utf8");
 }

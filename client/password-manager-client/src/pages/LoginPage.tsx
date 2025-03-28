@@ -5,19 +5,20 @@ import * as userService from "../services/UserService";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { assignToken } from "../store/slice/TokenSlice";
-import Modal from "../components/Modal";
+import Decrypt from "../services/RSAService";
 
 export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(true);
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const dispatch = useDispatch();
+
+  // Decrypt();
 
   async function onLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,7 +52,7 @@ export default function LoginPage() {
   return (
     <FrontPage>
       <div className="w-1/2 h-1/2 bg-green-400 flex flex-col justify-center items-center">
-        <form onSubmit={onLoginSubmit} className="flex flex-col">
+        <form onSubmit={onLoginSubmit} className="flex flex-col w-1/3">
           <input
             className="mb-2 border rounded-md px-2 py-1 outline-none"
             type="text"
@@ -82,7 +83,6 @@ export default function LoginPage() {
           </Link>
         </div>
       </div>
-      {isModalOpen && <Modal />}
     </FrontPage>
   );
 }
