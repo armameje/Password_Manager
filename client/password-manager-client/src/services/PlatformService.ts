@@ -3,6 +3,7 @@ import { Platform } from "../types/PlatformType";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { ApiResponse } from "../types/ApiResponseType";
+import { PlatformCard } from "../types/PlatformCardType";
 
 export class PlatformService {
   baseUrl: string;
@@ -17,10 +18,10 @@ export class PlatformService {
     let apiResponse: ApiResponse = { data: "", status: "" };
     await axios
       .post(
-        this.baseUrl + `${platform.user}/${platform.platformName}`,
+        this.baseUrl + `${platform.username}/${platform.platformName}`,
         {
           username: platform.username,
-          password: platform.password,
+          password: platform.platformPassword,
         },
         {
           headers: {
@@ -44,7 +45,7 @@ export class PlatformService {
     let value = true;
 
     await axios
-      .get(this.baseUrl + `${platform.user}/platforms`, {
+      .get(this.baseUrl + `${platform.username}/platforms`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.token}`,
@@ -56,5 +57,38 @@ export class PlatformService {
         if (!exist) value = false;
       });
     return value;
+  }
+
+  async getPlatformDetails(platform: Platform) {
+    let platformInfo: Platform = platform;
+    await axios
+      .get(this.baseUrl + `${platform.username}/${platform.platformName}/${platform.platformUsername}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        platformInfo = response.data;
+      });
+
+    return platformInfo;
+  }
+
+  async getAllPlatforms(user: string) {
+    let platforms: PlatformCard[] = [];
+
+    await axios
+      .get(this.baseUrl + `${user}/platforms`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        platforms = response.data;
+      });
+
+    return platforms;
   }
 }

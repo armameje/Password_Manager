@@ -3,7 +3,7 @@ import { PlatformService } from "../services/PlatformService";
 import { Platform } from "../types/PlatformType";
 
 type NewPlatformModalProps = {
-  currentUser?: string;
+  currentUser: string;
   setModal: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -19,10 +19,10 @@ export default function NewPlatformModal({ currentUser, setModal }: NewPlatformM
     e.preventDefault();
 
     const userInfo: Platform = {
-      user: currentUser,
+      username: currentUser,
       platformName: newPlatformName,
-      username: newPlatformUsername,
-      password: newPlatformPassword,
+      platformUsername: newPlatformUsername,
+      platformPassword: newPlatformPassword,
     };
 
     try {

@@ -4,16 +4,14 @@ import PlatformPage from "../components/PlatformPage";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { Endpoints } from "../enum/links";
 import Modal from "../components/Modal";
+import { PlatformService } from "../services/PlatformService";
+import { PlatformCard } from "../types/PlatformCardType";
 
-type PlatformCard = {
-  platformName: string;
-  username: string;
-};
 
 export default function Dashboard() {
   const auth = useAuth();
+  const platformService = new PlatformService();
   let platformCounter = 0;
   const [platforms, setPlatforms] = useState<PlatformCard[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,20 +22,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     const allPlatforms = async () => {
-      let headers = new Headers();
-      headers.append("Content-Type", "application/json");
-      headers.append("Authorization", `Bearer ${token}`);
-      const response = await fetch(Endpoints.Platform_Endpoint + `${auth?.user}/platforms`, {
-        method: "GET",
-        headers,
-      });
-      const json = await response.json();
+      const data = await platformService.getAllPlatforms(auth?.user as string);
 
-      setPlatforms(json);
+      setPlatforms(data);
     };
 
     allPlatforms();
-  }, []);
+  }, [platforms]);
 
   return (
     <div className="flex h-full w-full bg-orange-400 flex-col">

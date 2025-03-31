@@ -1,6 +1,6 @@
 export type Platform = {
-    user?: string | null,
-    platformName: string,
-    username?: string,
-    password?: string
+    username?: string | null,
+    platformName?: string,
+    platformUsername?: string,
+    platformPassword?: string
 }
