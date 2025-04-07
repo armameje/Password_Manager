@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, use, useEffect } from "react";
+import { Card } from "./ui/card";
 
 type PlatformPageProps = {
   platformName: string;
@@ -16,9 +17,12 @@ export default function PlatformPage({ platformName, username, isEmpty, setOpenM
   }, []);
   if (isEmpty) {
     return (
-      <button className="bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 focus:outline-none" onClick={() => setOpenModal(true)}>
-        <div className="">Add</div>
-      </button>
+      <Card className="h-1/5">
+        Add
+      </Card>
+      // <button className="bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 focus:outline-none" onClick={() => setOpenModal(true)}>
+      //   <div className="">Add</div>
+      // </button>
     );
   } else {
     return (

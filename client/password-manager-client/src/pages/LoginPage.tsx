@@ -5,7 +5,8 @@ import * as userService from "../services/UserService";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { assignToken } from "../store/slice/TokenSlice";
-import Decrypt from "../services/RSAService";
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
@@ -17,8 +18,6 @@ export default function LoginPage() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const dispatch = useDispatch();
-
-  // Decrypt();
 
   async function onLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,7 +50,43 @@ export default function LoginPage() {
 
   return (
     <FrontPage>
-      <div className="w-1/2 h-1/2 bg-green-400 flex flex-col justify-center items-center">
+      <Card className="w-1/2 h-1/2 flex flex-col items-center">
+        <CardTitle className="text-xl mt-7">The Vault</CardTitle>
+        <CardDescription className="mb-10">You're one-stop password vault</CardDescription>
+        <CardContent className="w-1/2 ">
+          <form onSubmit={onLoginSubmit} className="flex flex-col gap-2 items-center">
+            <input
+              className="mb-2 border rounded-md px-2 py-1 outline-none w-full"
+              type="text"
+              name="username"
+              id="usernameID"
+              placeholder="Username"
+              autoComplete="off"
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={submitting}
+            />
+            <input
+              className="border rounded-md px-2 py-1 outline-none w-full"
+              type="password"
+              name="password"
+              id="passwordID"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={submitting}
+            />
+            <div className="h-6 text-red-600 italic text-center">{errorMessage}</div>
+            <Button variant={"outline"} className="hover:cursor-pointer mb-3 w-1/2" disabled={submitting}>
+              Login
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col items-center ">
+          <Link to="/register">
+            <p className="italic opacity-50 hover:opacity-100 hover:cursor-pointer">Register here if you're new</p>
+          </Link>
+        </CardFooter>
+      </Card>
+      {/* <div className="w-1/2 h-1/2 bg-green-400 flex flex-col justify-center items-center">
         <form onSubmit={onLoginSubmit} className="flex flex-col w-1/3">
           <input
             className="mb-2 border rounded-md px-2 py-1 outline-none"
@@ -72,7 +107,6 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             disabled={submitting}
           />
-          <div className="h-6 text-red-600 italic text-center">{errorMessage}</div>
           <button type="submit" className="bg-white mt-2" disabled={submitting}>
             Login
           </button>
@@ -82,7 +116,7 @@ export default function LoginPage() {
             <p className="italic opacity-50 hover:opacity-100 hover:cursor-pointer">Register here if you're new</p>
           </Link>
         </div>
-      </div>
+      </div> */}
     </FrontPage>
   );
 }
