@@ -7,6 +7,7 @@ import { RootState } from "../store/store";
 import Modal from "../components/Modal";
 import { PlatformService } from "../services/PlatformService";
 import { PlatformCard } from "../types/PlatformCardType";
+import { Toaster } from "sonner";
 
 
 export default function Dashboard() {
@@ -31,12 +32,12 @@ export default function Dashboard() {
   }, [platforms]);
 
   return (
-    <div className="flex h-full w-full bg-orange-400 flex-col">
+    <div className="flex h-full w-full flex-col">
       <div className="flex min-w-full bg-green-400 px-4 py-3 text-2xl">
         <div className="">Hi {auth?.user}</div>
         <div></div>
       </div>
-      <div className="flex w-full h-full bg-slate-400 p-8 gap-10 justify-center flex-wrap">
+      <div className="flex w-full h-full bg-slate-400 p-8 gap-10 flex-col">
         {platforms?.map((x) => (
             <PlatformPage platformName={x.platformName} username={x.username} isEmpty={false} setOpenModal={setIsModalOpen} setPlatformUsername={setplatformUsername} setPlatformName={setPlatformName} key={platformCounter++} />
         ))}
@@ -46,6 +47,7 @@ export default function Dashboard() {
       {isModalOpen && <Modal platform={platformName} username={platformUsername} setModal={setIsModalOpen} isNew={false} />}
       {isNewModalOpen && <Modal platform="" username="" setModal={setNewIsModalOpen} isNew={true} />}
       {/* create new modal for new platforms */}
+      <Toaster duration={900} />
     </div>
   );
 }
