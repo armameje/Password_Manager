@@ -82,7 +82,7 @@ namespace PasswordManagerAPI.Controllers
 
             return Ok();
         }
-
+        // To delete, not needed. Already has existing endpoint to upsert platform
         /// <summary>
         /// Change a User's platform password
         /// </summary>

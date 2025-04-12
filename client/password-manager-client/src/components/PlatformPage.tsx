@@ -5,6 +5,8 @@ import { PlatformService } from "@/services/PlatformService";
 import useAuth from "@/hooks/useAuth";
 import Decrypt from "@/services/RSAService";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { selectPlatform } from "@/store/slice/PlatformSlice";
 
 type PlatformPageProps = {
   platformName: string;
@@ -17,6 +19,7 @@ type PlatformPageProps = {
 
 export default function PlatformPage({ platformName, username, isEmpty, setOpenModal, setPlatformName, setPlatformUsername }: PlatformPageProps) {
   const platformService = new PlatformService();
+  const dispatch = useDispatch();
   const auth = useAuth();
 
   async function onGetPasswordClick() {
@@ -28,13 +31,15 @@ export default function PlatformPage({ platformName, username, isEmpty, setOpenM
 
   async function setPasswordToClipboard(password: string) {
     await navigator.clipboard.writeText(password);
-    toast("Password is copied to clipboard")
+    toast("Password is copied to clipboard");
   }
 
-  useEffect(() => {
-    setPlatformName(platformName);
-    setPlatformUsername(username);
-  }, []);
+  function editPlatform() {
+    setOpenModal(true);
+
+    dispatch(selectPlatform({ platformName, username }));
+  }
+
   if (isEmpty) {
     return (
       <Card className="h-1/6 flex justify-center items-center">
@@ -59,7 +64,7 @@ export default function PlatformPage({ platformName, username, isEmpty, setOpenM
           </CardContent>
         </div>
         <CardFooter className="w-1/3 flex justify-end pr-10">
-          <Button className="mr-3" variant={"secondary"}>
+          <Button className="mr-3" variant={"secondary"} onClick={editPlatform}>
             Edit
           </Button>
           <Button variant={"destructive"}>Delete</Button>
