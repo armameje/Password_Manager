@@ -82,23 +82,6 @@ namespace PasswordManagerAPI.Controllers
 
             return Ok();
         }
-        // To delete, not needed. Already has existing endpoint to upsert platform
-        /// <summary>
-        /// Change a User's platform password
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="platform"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        [HttpPut]
-        [MapToApiVersion(1.0)]
-        [Route("{user}/{platform}/changepassword")]
-        public async Task<IActionResult> ChangePlatformPassword(string user, string platform, [FromBody] PlatformAccount account)
-        {
-            await _platformService.ChangePlatformAccountPasswordAsync(user, platform, account.Username, account.Password);
-
-            return Ok();
-        }
 
         /// <summary>
         /// Get all platform names of a User
