@@ -41,5 +41,34 @@ namespace PasswordManagerAPI.Tests.IntegrationTests
 
             Assert.True(platformsForUser.Count.Equals(2));
         }
+
+        [Fact]
+        public async Task AddPlatformAsync_Success()
+        {
+            var platform = new PlatformDetails
+            {
+                Username = "jenisi",
+                PlatformName = "Gmail",
+                PlatformUsername = "jackyasuo15@gmail.com",
+                PlatformPassword = "asds"
+            };
+
+            await _platformRepo.AddPlatformAsync(platform);
+        }
+
+        [Fact]
+        public async Task ModifyPlatformAsync_Success()
+        {
+            var platform = new ModifyPlatform
+            {
+                Username = "jenisi",
+                PlatformName = "Gmail",
+                PlatformUsername = "test",
+                NewPlatformUsername = "jackyasuo15@gmail.com",
+                PlatformPassword = "asdsd"
+            };
+
+            await _platformRepo.UpdatePlatformAsync(platform);
+        }
     }
 }

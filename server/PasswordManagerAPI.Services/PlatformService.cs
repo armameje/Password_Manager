@@ -31,39 +31,31 @@ namespace PasswordManagerAPI.Services
                 await _platformRepo.AddPlatformAsync(newPlatform);
             }
             catch (Exception e)
-            { 
-            
+            {
+                throw;
             }
         }
 
-        public async Task ChangePlatformAccountPasswordAsync(string username, string platformName, string platformUsername, string platformPassword)
+        public async Task ModifyPlatformAccountAsync(string username, string platformName, string platformUsername, string newPlatformUsername, string platformPassword)
         {
-            var changePlatform = new PlatformDetails
+            var modifyPlatform = new ModifyPlatform
             {
                 Username = username,
                 PlatformName = platformName,
                 PlatformUsername = platformUsername,
+                NewPlatformUsername = newPlatformUsername,
                 PlatformPassword = platformPassword
             };
 
             try
             {
-                var storedUser = await GetPlatformAccountAsync(username, platformName, platformUsername);
+                modifyPlatform.PlatformPassword = _encryption.Encrypt(platformPassword);
 
-                var storedPassword = _encryption.Decrypt(storedUser.PlatformPassword);
-
-                if (storedPassword.Equals(platformPassword, StringComparison.Ordinal))
-                {
-                    throw new Exception("Same Password");
-                }
-
-                changePlatform.PlatformPassword = _encryption.Encrypt(platformPassword);
-
-                await _platformRepo.ChangePlatformPasswordAsync(changePlatform);
+                await _platformRepo.UpdatePlatformAsync(modifyPlatform);
             }
             catch (Exception e)
-            {
-                throw;
+            { 
+            
             }
         }
 
@@ -146,21 +138,6 @@ namespace PasswordManagerAPI.Services
             }
 
             return platformPassword;
-        }
-
-        public string WrapPasswordByUsernameLength(int usernameLength, string password)
-        {
-            string wrappedPassword = password;
-
-            if (usernameLength == 0)
-            {
-                return wrappedPassword;
-            }
-
-            usernameLength--;
-            wrappedPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(password));
-
-            return WrapPasswordByUsernameLength(usernameLength, wrappedPassword);
         }
     }
 }

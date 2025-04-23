@@ -17,14 +17,5 @@ namespace PasswordManagerAPI.Tests.UnitTests
             _platformService = new PlatformService(_platformRepo, _encryption);
         }
 
-        [Fact]
-        public void WrapPasswordByUsernameLength_Success()
-        {
-            _platformService.WrapPasswordByUsernameLength(5, "test");
-
-            var expectedText = "VjJ0V2ExWXlWblJWYTBwUlZrUkJPUT09";
-
-            Assert.True(expectedText.Equals(expectedText));
-        }
     }
 }

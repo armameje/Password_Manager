@@ -34,7 +34,38 @@ namespace PasswordManagerAPI.Controllers
         [Route("{user}/{platform}")]
         public async Task<IActionResult> AddPlatform(string user, string platform, [FromBody] PlatformAccount account)
         {
-            await _platformService.AddPlatformAccountAsync(user, platform, account.Username, account.Password);
+            var message = string.Empty;
+
+            try
+            {
+                await _platformService.AddPlatformAccountAsync(user, platform, account.Username, account.Password);
+            }
+            catch (Exception e)
+            {
+                message = e.Message;
+            }
+
+            if (message is not null) 
+            {
+                return BadRequest(message);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [MapToApiVersion(1.0)]
+        [Route("{user}/{platform}/modify")]
+        public async Task<IActionResult> ModifyPlatform(string user, string platform, [FromBody] ModifyPlatformDetails platformDetails)
+        {
+            try
+            {
+                await _platformService.ModifyPlatformAccountAsync(user, platform, platformDetails.Username, platformDetails.NewUsername, platformDetails.Password);
+            }
+            catch (Exception e)
+            { 
+            
+            }
 
             return Ok();
         }

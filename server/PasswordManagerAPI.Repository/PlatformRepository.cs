@@ -23,6 +23,149 @@ namespace PasswordManagerAPI.Repository
                     var command = new SqlCommand
                     {
                         Connection = connection,
+                        CommandText = "platforms.usp_AddPlatform",
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    var usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@User",
+                        Value = platform.Username,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformNameParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformName",
+                        Value = platform.PlatformName,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformUsernameParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformUsername",
+                        Value = platform.PlatformUsername,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformPasswordParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformPassword",
+                        Value = platform.PlatformPassword,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    command.Parameters.Add(usernameParam);
+                    command.Parameters.Add(platformNameParam);
+                    command.Parameters.Add(platformUsernameParam);
+                    command.Parameters.Add(platformPasswordParam);
+
+                    connection.Open();
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException e)
+            {
+                if (e.Message.Contains("PRIMARY KEY", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new Exception("Platform already exists");
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        public async Task UpdatePlatformAsync(ModifyPlatform platform)
+        {
+            try
+            {
+                using (SqlConnection connection = new(_options.ConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = "platforms.usp_ModifyPlatform",
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    var usernameParam = new SqlParameter
+                    {
+                        ParameterName = "@User",
+                        Value = platform.Username,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformNameParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformName",
+                        Value = platform.PlatformName,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformUsernameParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformUsername",
+                        Value = platform.PlatformUsername,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var newPlatformUsernameParam = new SqlParameter
+                    {
+                        ParameterName = "@NewPlatformUsername",
+                        Value = platform.NewPlatformUsername,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var platformPasswordParam = new SqlParameter
+                    {
+                        ParameterName = "@PlatformPassword",
+                        Value = platform.PlatformPassword,
+                        Direction = ParameterDirection.Input,
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    command.Parameters.Add(usernameParam);
+                    command.Parameters.Add(platformNameParam);
+                    command.Parameters.Add(platformUsernameParam);
+                    command.Parameters.Add(newPlatformUsernameParam);
+                    command.Parameters.Add(platformPasswordParam);
+
+                    connection.Open();
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (SqlException e)
+            {
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+        }
+
+        public async Task UpsertPlatformAsync(PlatformDetails platform)
+        {
+            try
+            {
+                using (SqlConnection connection = new(_options.ConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
                         CommandText = "platforms.usp_UpsertPlatform",
                         CommandType = CommandType.StoredProcedure
                     };
