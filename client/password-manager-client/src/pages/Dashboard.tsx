@@ -7,7 +7,7 @@ import { RootState } from "../store/store";
 import { PlatformService } from "../services/PlatformService";
 import { PlatformCard } from "../types/PlatformCardType";
 import { Toaster } from "sonner";
-import { PopUp } from "@/components/TestDialog";
+import { PlatformModal } from "@/components/PlatformModal";
 
 
 export default function Dashboard() {
@@ -47,7 +47,7 @@ export default function Dashboard() {
       {/* {isModalOpen && <Modal platform={platformName} username={platformUsername} setModal={setIsModalOpen} isNew={false} />}
       {isNewModalOpen && <Modal platform="" username="" setModal={setNewIsModalOpen} isNew={true} />} */}
       {/* create new modal for new platforms */}
-      <PopUp isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+      <PlatformModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
       <Toaster duration={900} />
     </div>
   );

@@ -4,23 +4,26 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { ApiResponse } from "../types/ApiResponseType";
 import { PlatformCard } from "../types/PlatformCardType";
+import useAuth from "@/hooks/useAuth";
 
 export class PlatformService {
   baseUrl: string;
   token: string;
+  user?: string | null;
 
   constructor(baseUrl = "https://localhost:7117/api/v1/platform/") {
     this.baseUrl = baseUrl;
     this.token = useSelector((state: RootState) => state.token.token);
+    this.user = useAuth()?.user;
   }
 
   async addPlatform(platform: Platform): Promise<ApiResponse> {
     let apiResponse: ApiResponse = { data: "", status: "" };
     await axios
       .post(
-        this.baseUrl + `${platform.username}/${platform.platformName}`,
+        this.baseUrl + `${this.user}/${platform.platformName}`,
         {
-          username: platform.username,
+          username: platform.platformUsername,
           password: platform.platformPassword,
         },
         {
@@ -41,11 +44,37 @@ export class PlatformService {
     return apiResponse;
   }
 
+  async updatePlatform(platform: Platform, newPlatformUsername: string): Promise<ApiResponse> {
+    let apiResponse: ApiResponse = { data: "", status: "" };
+
+    await axios
+      .post(
+        this.baseUrl + `${this.user}/${platform.platformName}/modify`,
+        {
+          username: platform.platformUsername,
+          password: platform.platformPassword,
+          newusername: newPlatformUsername,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
+      .then((response) => {
+        apiResponse.status = response.status;
+      })
+      .catch((reponse) => {});
+
+    return apiResponse;
+  }
+
   async checkIfPlatformExists(platform: Platform): Promise<boolean> {
     let value = true;
 
     await axios
-      .get(this.baseUrl + `${platform.username}/platforms`, {
+      .get(this.baseUrl + `${this.user}/platforms`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.token}`,
@@ -53,7 +82,7 @@ export class PlatformService {
       })
       .then((response) => {
         response.status;
-        let exist = response.data.some((x: { username: string; platformName: string }) => x.username === platform.username && x.platformName === platform.platformName);
+        let exist = response.data.some((x: { username: string; platformName: string }) => x.username === platform.platformUsername && x.platformName === platform.platformName);
         if (!exist) value = false;
       });
     return value;
@@ -62,7 +91,7 @@ export class PlatformService {
   async getPlatformDetails(platform: Platform) {
     let platformInfo: Platform = platform;
     await axios
-      .get(this.baseUrl + `${platform.username}/${platform.platformName}/${platform.platformUsername}`, {
+      .get(this.baseUrl + `${this.user}/${platform.platformName}/${platform.platformUsername}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.token}`,
@@ -90,5 +119,14 @@ export class PlatformService {
       });
 
     return platforms;
+  }
+
+  async deletePlatform(platform: Platform) {
+    await axios.delete(this.baseUrl + `${this.user}/delete/${platform.platformName}/${platform.platformUsername}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
+    });
   }
 }

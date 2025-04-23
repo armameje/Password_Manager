@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { PlatformService } from "@/services/PlatformService";
-import useAuth from "@/hooks/useAuth";
 import Decrypt from "@/services/RSAService";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
@@ -17,13 +16,12 @@ type PlatformPageProps = {
   setPlatformUsername: Dispatch<SetStateAction<string>>;
 };
 
-export default function PlatformPage({ platformName, username, isEmpty, setOpenModal, setPlatformName, setPlatformUsername }: PlatformPageProps) {
+export default function PlatformPage({ platformName, username, isEmpty, setOpenModal }: PlatformPageProps) {
   const platformService = new PlatformService();
   const dispatch = useDispatch();
-  const auth = useAuth();
 
   async function onGetPasswordClick() {
-    const response = await platformService.getPlatformDetails({ username: auth?.user, platformName, platformUsername: username });
+    const response = await platformService.getPlatformDetails({ platformName, platformUsername: username });
 
     const decryptedString = Decrypt(response.platformPassword as string);
     setPasswordToClipboard(decryptedString);
@@ -34,24 +32,27 @@ export default function PlatformPage({ platformName, username, isEmpty, setOpenM
     toast("Password is copied to clipboard");
   }
 
-  function editPlatform() {
+  function handleClickEditPlatform() {
     setOpenModal(true);
 
     dispatch(selectPlatform({ platformName, username }));
   }
 
+  async function handleClickDeletePlatform() {
+    await platformService.deletePlatform({ platformName, platformUsername: username });
+
+    toast("Platform Deleted");
+  }
+
   if (isEmpty) {
     return (
-      <Card className="h-1/6 flex justify-center items-center">
+      <Card className="h-1/6 flex justify-center items-center hover:cursor-pointer hover:transform-[scale(1.01)]">
         <CardTitle>Add</CardTitle>
       </Card>
-      // <button className="bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 focus:outline-none" onClick={() => setOpenModal(true)}>
-      //   <div className="">Add</div>
-      // </button>
     );
   } else {
     return (
-      <Card className="flex flex-row py-5 justify-center">
+      <Card className="flex flex-row py-5 justify-center hover:cursor-pointer hover:transform-[scale(1.01)]">
         <div className="flex flex-col w-2/3">
           <CardHeader>
             <CardTitle className="text-lg">{platformName}</CardTitle>
@@ -64,16 +65,12 @@ export default function PlatformPage({ platformName, username, isEmpty, setOpenM
           </CardContent>
         </div>
         <CardFooter className="w-1/3 flex justify-end pr-10">
-          <Button className="mr-3" variant={"secondary"} onClick={editPlatform}>
+          <Button className="mr-3" variant={"secondary"} onClick={handleClickEditPlatform}>
             Edit
           </Button>
-          <Button variant={"destructive"}>Delete</Button>
+          <Button variant={"destructive"} onClick={handleClickDeletePlatform}>Delete</Button>
         </CardFooter>
       </Card>
-      // <button className="bg-pink-300 pt-2 pb-6 px-5 w-1/5 h-1/5 focus:outline-none" onClick={() => setOpenModal(true)}>
-      //   <div className="">{platformName}</div>
-      //   <div className="">{username}</div>
-      // </button>
     );
   }
 }

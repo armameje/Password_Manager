@@ -53,7 +53,7 @@ export default function LoginPage() {
       <Card className="w-1/2 h-1/2 flex flex-col items-center">
         <CardTitle className="text-xl mt-7">The Vault</CardTitle>
         <CardDescription className="mb-10">You're one-stop password vault</CardDescription>
-        <CardContent className="w-1/2 ">
+        <CardContent className="w-1/2">
           <form onSubmit={onLoginSubmit} className="flex flex-col gap-2 items-center">
             <input
               className="mb-2 border rounded-md px-2 py-1 outline-none w-full"
@@ -86,37 +86,6 @@ export default function LoginPage() {
           </Link>
         </CardFooter>
       </Card>
-      {/* <div className="w-1/2 h-1/2 bg-green-400 flex flex-col justify-center items-center">
-        <form onSubmit={onLoginSubmit} className="flex flex-col w-1/3">
-          <input
-            className="mb-2 border rounded-md px-2 py-1 outline-none"
-            type="text"
-            name="username"
-            id="usernameID"
-            placeholder="Username"
-            autoComplete="off"
-            onChange={(e) => setUsername(e.target.value)}
-            disabled={submitting}
-          />
-          <input
-            className="border rounded-md px-2 py-1 outline-none"
-            type="password"
-            name="password"
-            id="passwordID"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={submitting}
-          />
-          <button type="submit" className="bg-white mt-2" disabled={submitting}>
-            Login
-          </button>
-        </form>
-        <div className="flex justify-end flex-col mt-5">
-          <Link to="/register">
-            <p className="italic opacity-50 hover:opacity-100 hover:cursor-pointer">Register here if you're new</p>
-          </Link>
-        </div>
-      </div> */}
     </FrontPage>
   );
 }
