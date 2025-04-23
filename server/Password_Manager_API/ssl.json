@@ -1,6 +1,0 @@
-{
-    "OpenSSLKeyPaths" : {
-        "PublicKey" : "C:\\Users\\Admin\\Downloads\\ProjectKeys\\public.pem",
-        "PrivateKey" : "C:\\Users\\Admin\\Downloads\\ProjectKeys\\keep.pem"
-    }
-}

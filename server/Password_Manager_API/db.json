@@ -1,5 +1,0 @@
-{
-    "DBConnectionString" : {
-        "PasswordManagerDB" : "Server=PSUEDOENGINEERD\\TEW_SQLEXPRESS;Database=Password_Manager;Trusted_Connection=True;"
-    } 
-}
