@@ -36,13 +36,15 @@ export class UserService {
         apiResponse.token = response.data.token;
         apiResponse.status = response.status;
       })
-      .catch((error) => {console.error(error)});
+      .catch((error) => {
+        console.error(error);
+      });
 
     return apiResponse;
   }
 
   async registerUser(username: string, password: string) {
-    let apiResponse: LoginResponse = {};
+    let apiResponse: LoginResponse = { status: 0 };
 
     await axios
       .post(
@@ -62,13 +64,15 @@ export class UserService {
         apiResponse.token = response.data.token;
         apiResponse.status = response.status;
       })
-      .catch((error) => {console.error(error)});
+      .catch((error) => {
+        console.error(error);
+      });
 
     return apiResponse;
   }
 
   async deleteUser() {
-    let apiResponse: LoginResponse = {};
+    let apiResponse: LoginResponse = { status: 0 };
 
     await axios
       .delete(this.baseUrl + `deleteuser/${this.user}`, {
@@ -80,13 +84,15 @@ export class UserService {
       .then((response) => {
         apiResponse.status = response.status;
       })
-      .catch((e) => {console.error(e)});
+      .catch((e) => {
+        console.error(e);
+      });
 
     return apiResponse;
   }
 
   async changeUserPassword(password: string) {
-    let apiResponse: LoginResponse = {};
+    let apiResponse: LoginResponse = { status: 0 };
 
     await axios
       .put(
@@ -105,7 +111,9 @@ export class UserService {
       .then((response) => {
         apiResponse.status = response.status;
       })
-      .catch((e) => {console.error(e)});
+      .catch((e) => {
+        console.error(e);
+      });
 
     return apiResponse;
   }

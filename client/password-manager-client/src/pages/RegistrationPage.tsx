@@ -34,6 +34,8 @@ export default function RegistrationPage() {
 
         if (!!registrationResponse.error) {
           setErrorMessage(registrationResponse.error);
+        } else if (registrationResponse.status === 0) {
+          setErrorMessage("Network Error")
         } else {
           auth?.setUser(username);
           dispatch(assignToken({ token: registrationResponse.token as string }));

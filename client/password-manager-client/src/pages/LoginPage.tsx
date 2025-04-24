@@ -32,8 +32,11 @@ export default function LoginPage() {
       } else {
         const loginResponse = await userService.loginUser(username, password);
 
+        console.log(loginResponse)
         if (!!loginResponse.error) {
           setErrorMessage(loginResponse.error);
+        } else if (loginResponse.status === 0) {
+          setErrorMessage("Network Error")
         } else {
           auth?.setUser(username);
           dispatch(assignToken({ token: loginResponse.token as string }));

@@ -4,5 +4,5 @@ COPY package.json .
 RUN npm i
 COPY . .
 RUN npm run build
-EXPOSE 7925
-CMD [ "npm run preview" ]
+EXPOSE 7923
+CMD [ "npm", "run", "preview" ]
