@@ -1,68 +1,112 @@
-import { Endpoints as endpoints } from "../enum/links";
+import useAuth from "@/hooks/useAuth";
+import { RootState } from "@/store/store";
+import { LoginResponse } from "@/types/LoginResponseType";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-type LoginResponse = {
-  error: string;
+export class UserService {
+  baseUrl: string;
   token: string;
-};
+  user?: string | null;
 
-export async function LoginUser(username: string, password: string): Promise<LoginResponse> {
-  let response = new Response();
-
-  try {
-    response = await fetch(endpoints.Login, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
-  } catch {
-    return { error: "Connection Error", token: "" } satisfies LoginResponse;
+  constructor(baseUrl = "https://localhost:7117/api/v1/user/") {
+    this.baseUrl = baseUrl;
+    this.token = useSelector((state: RootState) => state.token.token);
+    this.user = useAuth()?.user;
   }
 
-  return response.json();
-}
+  async loginUser(username: string, password: string) {
+    let apiResponse: LoginResponse = { error: "", token: "", status: 0 };
 
-export async function RegisterUser(username: string, password: string): Promise<LoginResponse> {
-  let response = new Response();
+    await axios
+      .post(
+        this.baseUrl + "login",
+        {
+          username,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        apiResponse.error = response.data.error;
+        apiResponse.token = response.data.token;
+        apiResponse.status = response.status;
+      })
+      .catch((error) => {});
 
-  try {
-    response = await fetch(endpoints.Register, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    });
-  } catch {
-    return { error: "Connection Error", token: "" } satisfies LoginResponse;
+    return apiResponse;
   }
 
-  return response.json();
-}
+  async registerUser(username: string, password: string) {
+    let apiResponse: LoginResponse = {};
 
-export async function DeleteUser(username: string) {
-  let response = new Response();
+    await axios
+      .post(
+        this.baseUrl + "register",
+        {
+          username,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        apiResponse.error = response.data.error;
+        apiResponse.token = response.data.token;
+        apiResponse.status = response.status;
+      })
+      .catch((error) => {});
 
-  try {
-    response = await fetch(endpoints.Delete_User);
-  } catch {
-    return { error: "Connection Error", token: "" };
+    return apiResponse;
   }
-}
 
-export async function ChangeUserPassword(username: string, password: string) {
-  let response = new Response();
+  async deleteUser() {
+    let apiResponse: LoginResponse = {};
 
-  try {
-    response = await fetch(endpoints.Change_User_Password);
-  } catch {
-    return { error: "Conection Error", token: "" };
+    await axios
+      .delete(this.baseUrl + `deleteuser/${this.user}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        apiResponse.status = response.status;
+      })
+      .catch((e) => {console.error(e)});
+
+    return apiResponse;
+  }
+
+  async changeUserPassword(password: string) {
+    let apiResponse: LoginResponse = {};
+
+    await axios
+      .put(
+        this.baseUrl + "changeuserpassword",
+        {
+          username: this.user,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
+      .then((response) => {
+        apiResponse.status = response.status;
+      })
+      .catch((e) => {console.error(e)});
+
+    return apiResponse;
   }
 }

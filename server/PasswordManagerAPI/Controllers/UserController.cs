@@ -48,8 +48,8 @@ namespace PasswordManagerAPI.Controllers
         [HttpDelete]
         [Authorize]
         [MapToApiVersion(1.0)]
-        [Route("[action]")]
-        public async Task<IActionResult> DeleteUser([FromBody] string username)
+        [Route("[action]/{username}")]
+        public async Task<IActionResult> DeleteUser(string username)
         {
             await _userServce.DeleteUserAsync(username);
 

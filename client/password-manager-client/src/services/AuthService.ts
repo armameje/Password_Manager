@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 
 const TOKEN_ISSUER = "PasswordManager_Jack";
 const AUDIENCE = "pleabs";
-const dispatch = useDispatch();
 
 type JwtToken = {
   valid: boolean;

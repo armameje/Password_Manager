@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import FrontPage from "./FrontPage";
-import * as userService from "../services/UserService";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { assignToken } from "../store/slice/TokenSlice";
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { UserService } from "@/services/UserService";
 
 export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
@@ -18,6 +18,7 @@ export default function LoginPage() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const dispatch = useDispatch();
+  const userService = new UserService();
 
   async function onLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,13 +30,13 @@ export default function LoginPage() {
       if (!username || !password) {
         setErrorMessage("Username or Password must have value");
       } else {
-        const loginResponse = await userService.LoginUser(username, password);
+        const loginResponse = await userService.loginUser(username, password);
 
         if (!!loginResponse.error) {
           setErrorMessage(loginResponse.error);
         } else {
           auth?.setUser(username);
-          dispatch(assignToken({ token: loginResponse.token }));
+          dispatch(assignToken({ token: loginResponse.token as string }));
           navigate(from, { replace: true });
         }
       }

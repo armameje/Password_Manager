@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import FrontPage from "./FrontPage";
-import * as userService from "../services/UserService";
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { assignToken } from "@/store/slice/TokenSlice";
+import { UserService } from "@/services/UserService";
 
 export default function RegistrationPage() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
+  const userService = new UserService();
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,13 +30,13 @@ export default function RegistrationPage() {
       if (!username || !password) {
         setErrorMessage("Username or Password must have value");
       } else {
-        const loginResponse = await userService.RegisterUser(username, password);
+        const registrationResponse = await userService.registerUser(username, password);
 
-        if (!!loginResponse.error) {
-          setErrorMessage(loginResponse.error);
+        if (!!registrationResponse.error) {
+          setErrorMessage(registrationResponse.error);
         } else {
           auth?.setUser(username);
-          dispatch(assignToken({ token: loginResponse.token }));
+          dispatch(assignToken({ token: registrationResponse.token as string }));
           navigate(from, { replace: true });
         }
       }

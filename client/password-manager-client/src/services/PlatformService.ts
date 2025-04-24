@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { Platform } from "../types/PlatformType";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -68,7 +68,7 @@ export class PlatformService {
       .then((response) => {
         apiResponse.status = response.status;
       })
-      .catch((reponse) => {});
+      .catch();
 
     return apiResponse;
   }
