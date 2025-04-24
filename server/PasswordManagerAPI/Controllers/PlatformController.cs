@@ -45,7 +45,7 @@ namespace PasswordManagerAPI.Controllers
                 message = e.Message;
             }
 
-            if (message is not null) 
+            if (!String.IsNullOrEmpty(message)) 
             {
                 return BadRequest(message);
             }
@@ -92,16 +92,6 @@ namespace PasswordManagerAPI.Controllers
             var platformAccount = await _platformService.GetPlatformAccountAsync(user, platform, username);
 
             return Ok(platformAccount);
-        }
-
-        [HttpPost]
-        [MapToApiVersion(1.0)]
-        [Route("{user}/{platform}/account")]
-        public async Task<IActionResult> GetPlatformCredential(string user, string platform, [FromBody] string username)
-        { 
-            var retrievedPassword = await _platformService.RetrievePlatformPasswordAsync(user, platform, username);
-
-            return Ok(retrievedPassword);
         }
 
         /// <summary>

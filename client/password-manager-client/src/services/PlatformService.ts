@@ -19,6 +19,7 @@ export class PlatformService {
 
   async addPlatform(platform: Platform): Promise<ApiResponse> {
     let apiResponse: ApiResponse = { data: "", status: "" };
+    console.log(platform);
     await axios
       .post(
         this.baseUrl + `${this.user}/${platform.platformName}`,
@@ -34,11 +35,13 @@ export class PlatformService {
         }
       )
       .then((response) => {
+        console.log(response);
         apiResponse.status = response.status;
         apiResponse.data = response.data;
       })
       .catch((response) => {
-        console.error(response);
+        apiResponse.data = response.request.responseText;
+        apiResponse.status = response.status;
       });
 
     return apiResponse;
@@ -133,14 +136,16 @@ export class PlatformService {
   async kagi() {
     let string = "sd";
 
-    await axios.get(this.baseUrl + "kagi", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.token}`,
-      },
-    }).then((response) => {
-      string = response.data;
-    })
+    await axios
+      .get(this.baseUrl + "kagi", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        string = response.data;
+      });
 
     return string;
   }

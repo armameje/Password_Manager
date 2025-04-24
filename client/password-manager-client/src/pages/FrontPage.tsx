@@ -3,5 +3,5 @@ type FrontPageProps = {
 };
 
 export default function FrontPage({ children }: FrontPageProps) {
-  return <div className="bg-orange-300 size-full flex items-center justify-center">{children}</div>;
+  return <div className="bg-[#F5EEDD] size-full flex items-center justify-center">{children}</div>;
 }

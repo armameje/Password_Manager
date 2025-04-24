@@ -2,13 +2,10 @@ import { Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import PlatformPage from "../components/PlatformPage";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
 import { PlatformService } from "../services/PlatformService";
 import { PlatformCard } from "../types/PlatformCardType";
 import { Toaster } from "sonner";
 import { PlatformModal } from "@/components/PlatformModal";
-
 
 export default function Dashboard() {
   const auth = useAuth();
@@ -16,10 +13,12 @@ export default function Dashboard() {
   let platformCounter = 0;
   const [platforms, setPlatforms] = useState<PlatformCard[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNewModalOpen, setNewIsModalOpen] = useState(false);
-  const [platformName, setPlatformName] = useState("");
-  const [platformUsername, setplatformUsername] = useState("");
-  const token = useSelector((state: RootState) => state.token.token);
+
+  function capitalize(x: string) {
+    const string = x;
+
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   useEffect(() => {
     const allPlatforms = async () => {
@@ -33,15 +32,14 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <div className="flex min-w-full bg-green-400 px-4 py-3 text-2xl">
-        <div className="">Hi {auth?.user}</div>
-        <div></div>
+      <div className="flex min-w-full bg-[#7AE2CF] px-6 py-4 text-2xl">
+        <div className="text-[#06202B]">Hi {capitalize(auth?.user as string)} 👋</div>
       </div>
-      <div className="flex w-full h-full bg-slate-400 p-8 gap-10 flex-col">
+      <div className="flex w-full h-full bg-[#F5EEDD] p-8 gap-10 flex-col overflow-x-hidden">
         {platforms?.map((x) => (
-            <PlatformPage platformName={x.platformName} username={x.username} isEmpty={false} setOpenModal={setIsModalOpen} setPlatformUsername={setplatformUsername} setPlatformName={setPlatformName} key={platformCounter++} />
+          <PlatformPage platformName={x.platformName} username={x.username} isEmpty={false} setOpenModal={setIsModalOpen} key={platformCounter++} />
         ))}
-        <PlatformPage isEmpty={true} platformName="" username="" setPlatformUsername={setplatformUsername} setPlatformName={setPlatformName} setOpenModal={setNewIsModalOpen} />
+        <PlatformPage isEmpty={true} platformName="" username="" setOpenModal={setIsModalOpen} />
       </div>
       <Outlet />
       <PlatformModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
