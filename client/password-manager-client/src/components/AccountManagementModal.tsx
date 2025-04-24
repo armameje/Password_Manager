@@ -22,7 +22,7 @@ export default function AccountManagementModal({ isOpen, setIsOpen }: AccountMan
   const [username, setUsername] = useState(auth?.user as string);
   const [password, setPassword] = useState("");
   const [isPasswordInputVisible, setIsPasswordInputVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+//   const [errorMessage, setErrorMessage] = useState("");
 
   async function handleClickChangePassword() {
     setIsPasswordInputVisible((x) => !x);
@@ -70,7 +70,7 @@ export default function AccountManagementModal({ isOpen, setIsOpen }: AccountMan
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                onClick={(e) => {
+                onClick={() => {
                   setIsPasswordInputVisible((x) => !x);
                   setPassword("");
                 }}

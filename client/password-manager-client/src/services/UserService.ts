@@ -36,7 +36,7 @@ export class UserService {
         apiResponse.token = response.data.token;
         apiResponse.status = response.status;
       })
-      .catch((error) => {});
+      .catch((error) => {console.error(error)});
 
     return apiResponse;
   }
@@ -62,7 +62,7 @@ export class UserService {
         apiResponse.token = response.data.token;
         apiResponse.status = response.status;
       })
-      .catch((error) => {});
+      .catch((error) => {console.error(error)});
 
     return apiResponse;
   }

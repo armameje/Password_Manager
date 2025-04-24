@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { useDispatch } from "react-redux";
 
 const TOKEN_ISSUER = "PasswordManager_Jack";
 const AUDIENCE = "pleabs";

@@ -14,7 +14,7 @@ export default function Dashboard() {
   const platformService = new PlatformService();
   let platformCounter = 0;
   const [platforms, setPlatforms] = useState<PlatformCard[]>();
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(true);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function capitalize(x: string) {
