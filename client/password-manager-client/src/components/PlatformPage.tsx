@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { PlatformService } from "@/services/PlatformService";
@@ -17,13 +17,14 @@ type PlatformPageProps = {
 };
 
 export default function PlatformPage({ platformName, username, isEmpty, setOpenModal }: PlatformPageProps) {
+  const [kagi, setKagi] = useState("");
   const platformService = new PlatformService();
   const dispatch = useDispatch();
 
   async function onGetPasswordClick() {
     const response = await platformService.getPlatformDetails({ platformName, platformUsername: username });
 
-    const decryptedString = Decrypt(response.platformPassword as string);
+    const decryptedString = Decrypt(response.platformPassword as string, kagi);
     setPasswordToClipboard(decryptedString);
   }
 
@@ -43,6 +44,16 @@ export default function PlatformPage({ platformName, username, isEmpty, setOpenM
 
     toast("Platform Deleted");
   }
+
+  useEffect(() => {
+    const getKagi = async () => {
+      let k = await platformService.kagi();
+
+      setKagi(k);
+    }
+
+    getKagi();
+  }, []);
 
   if (isEmpty) {
     return (

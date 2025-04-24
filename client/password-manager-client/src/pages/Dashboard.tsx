@@ -44,9 +44,6 @@ export default function Dashboard() {
         <PlatformPage isEmpty={true} platformName="" username="" setPlatformUsername={setplatformUsername} setPlatformName={setPlatformName} setOpenModal={setNewIsModalOpen} />
       </div>
       <Outlet />
-      {/* {isModalOpen && <Modal platform={platformName} username={platformUsername} setModal={setIsModalOpen} isNew={false} />}
-      {isNewModalOpen && <Modal platform="" username="" setModal={setNewIsModalOpen} isNew={true} />} */}
-      {/* create new modal for new platforms */}
       <PlatformModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
       <Toaster duration={900} />
     </div>

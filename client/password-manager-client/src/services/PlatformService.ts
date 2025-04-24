@@ -129,4 +129,19 @@ export class PlatformService {
       },
     });
   }
+
+  async kagi() {
+    let string = "sd";
+
+    await axios.get(this.baseUrl + "kagi", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
+    }).then((response) => {
+      string = response.data;
+    })
+
+    return string;
+  }
 }
