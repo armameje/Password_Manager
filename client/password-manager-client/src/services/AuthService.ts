@@ -11,7 +11,7 @@ type JwtToken = {
 };
 
 export function verifyJWT(token: string): JwtToken {
-  const decodedToken = jwt.decode(token, { complete: true });
+  const decodedToken: any = jwt.decode(token,{ complete: true });
 
   if (decodedToken?.payload.iss != TOKEN_ISSUER && decodedToken?.payload.aud != AUDIENCE) {
     return { valid: false } as JwtToken;
