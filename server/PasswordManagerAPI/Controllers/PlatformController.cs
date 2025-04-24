@@ -52,7 +52,14 @@ namespace PasswordManagerAPI.Controllers
 
             return Ok();
         }
-
+        
+        /// <summary>
+        /// Modify a platform's username and/or password
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="platform"></param>
+        /// <param name="platformDetails"></param>
+        /// <returns></returns>
         [HttpPost]
         [MapToApiVersion(1.0)]
         [Route("{user}/{platform}/modify")]
@@ -127,6 +134,18 @@ namespace PasswordManagerAPI.Controllers
             var allPlatforms = await _platformService.GetAllPlatformsOfUserAsync(user);
 
             return Ok(allPlatforms);
+        }
+
+        /// <summary>
+        /// Retrieve key for encryption
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [MapToApiVersion(1.0)]
+        [Route("kagi")]
+        public async Task<IActionResult> RetrieveKagi()
+        {
+            return Ok(_platformService.GetKagi());
         }
     }
 }

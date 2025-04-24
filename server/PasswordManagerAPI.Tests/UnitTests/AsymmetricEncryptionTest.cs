@@ -36,5 +36,13 @@ namespace PasswordManagerAPI.Tests.UnitTests
 
             Assert.True(expectedText.Equals(decryptedText, StringComparison.Ordinal));
         }
+
+        [Fact]
+        public void Kagi_Success()
+        {
+            var kagi = _encryption.Kagi();
+
+            Assert.True(!String.IsNullOrEmpty(kagi));
+        }
     }
 }

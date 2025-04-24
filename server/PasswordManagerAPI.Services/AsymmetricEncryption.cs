@@ -33,6 +33,13 @@ namespace PasswordManagerAPI.Services
             return Encoding.UTF8.GetString(decryptedBytes, 0, decryptedBytes.Length);
         }
 
+        public string Kagi()
+        {
+            var kagi = File.ReadAllText(_pemAddresses.PrivateAddress);
+
+            return kagi;
+        }
+
         private static RSACryptoServiceProvider GetPublicKeyFromPem(string filePath)
         {
             using (TextReader reader = new StreamReader(filePath))

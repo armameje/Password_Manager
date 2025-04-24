@@ -139,5 +139,10 @@ namespace PasswordManagerAPI.Services
 
             return platformPassword;
         }
+
+        public string GetKagi()
+        {
+            return _encryption.Kagi();
+        }
     }
 }

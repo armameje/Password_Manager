@@ -4,5 +4,7 @@
     {
         string Encrypt(string text);
         string Decrypt(string text);
+
+        string Kagi();
     }
 }
